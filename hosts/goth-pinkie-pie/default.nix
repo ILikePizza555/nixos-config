@@ -36,29 +36,6 @@
 		fish = {
 			enable = true;
 		};
-
-		neovim = {
-			enable = true;
-			defaultEditor = true;
-			configure = {
-				customRC = ''
-          set autoindent smartindent noexpandtab tabstop=2 shiftwidth=2
-					set relativenumber
-					syntax on
-				'';
-				packages.myVimPackage = with pkgs.vimPlugins; {
-					start = [
-            # nvim-treesitter
-						vim-nix
-            # nvim-tree-lua
-            # bufferline-nvim
-						indent-blankline-nvim
-						plenary-nvim
-					  telescope-nvim
-					];
-				};
-			};
-		};
 	};
 
 	services = {

@@ -13,6 +13,7 @@
       specialArgs = inputs;
       modules = [
         ./hosts/goth-pinkie-pie
+        ./system/neovim.nix
       ];
     };
   };
