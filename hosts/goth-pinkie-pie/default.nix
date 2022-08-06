@@ -1,4 +1,4 @@
-{ config, nixpkgs, ... }:
+{ config, pkgs, ... }:
 
 {
 	imports = [
@@ -15,8 +15,8 @@
 
 	environment = {
 		systemPackages = [
-			nixpkgs.git
-			nixpkgs.ripgrep
+			pkgs.git
+			pkgs.ripgrep
 		];
 	};
 
