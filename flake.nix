@@ -5,10 +5,9 @@
       url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    inputs.vscode-server.url = "github:msteen/nixos-vscode-server";
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, vscode-server }: {
+  outputs = inputs@{ self, nixpkgs, home-manager }: {
     nixosConfigurations."vm-goth-pinkie-pie" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = inputs;
@@ -24,7 +23,7 @@
               username = "izzylan";
               homeDirectory = "/home/izzylan";
               stateVersion = "22.05";
-            }
+            };
 
             programs = {
               git = {
@@ -35,7 +34,7 @@
 
               home-manager = {
                 enable = true;
-              }
+              };
             };
           };
         }

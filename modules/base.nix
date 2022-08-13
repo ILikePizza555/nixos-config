@@ -1,5 +1,5 @@
 /* Base nixos system config I use on all my machines. */
-{ config, pkgs, ...};
+{ config, pkgs, ...}:
 
 {
   environment = {
@@ -11,7 +11,7 @@
 
   # We have to enable nixFlakes since this is a flake
   nix = {
-    package = pkgs.nixFlakes
+    package = pkgs.nixFlakes;
 		extraOptions = ''experimental-features = nix-command flakes'';
   };
 
