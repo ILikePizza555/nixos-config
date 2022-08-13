@@ -5,15 +5,40 @@
       url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    inputs.vscode-server.url = "github:msteen/nixos-vscode-server";
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager }: {
+  outputs = inputs@{ self, nixpkgs, home-manager, vscode-server }: {
     nixosConfigurations."vm-goth-pinkie-pie" = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = inputs;
       modules = [
+        ./modules/base.nix
         ./hosts/goth-pinkie-pie
-        ./system/neovim.nix
+        ./modules/neovim.nix
+        home-manager.nixosModules.home-manager
+        {
+          home-manager.users.izzylan = {config, pkgs, ...}:
+          {
+            home = {
+              username = "izzylan";
+              homeDirectory = "/home/izzylan";
+              stateVersion = "22.05";
+            }
+
+            programs = {
+              git = {
+                enable = true;
+                userName = "izzylan";
+                userEmail = "avrisaac555@gmail.com";
+              };
+
+              home-manager = {
+                enable = true;
+              }
+            };
+          };
+        }
       ];
     };
   };

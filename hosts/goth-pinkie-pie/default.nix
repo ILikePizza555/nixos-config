@@ -13,13 +13,6 @@
 		};
 	};
 
-	environment = {
-		systemPackages = [
-			pkgs.git
-			pkgs.ripgrep
-		];
-	};
-
 	networking = {
 		hostName = "vm-goth-pinkie-pie";
 		firewall = {
@@ -27,23 +20,8 @@
 		};
 	};
 
-	nix = {
-		package = pkgs.nixFlakes;
-		extraOptions = ''experimental-features = nix-command flakes'';
-	};
-
-	programs = {
-		fish = {
-			enable = true;
-		};
-	};
-
 	services = {
 		openssh.enable = true;
-	};
-
-	time = {
-		timeZone = "America/Los_Angeles";
 	};
 
 	users = {
