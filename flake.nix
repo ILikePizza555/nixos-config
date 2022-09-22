@@ -15,7 +15,6 @@
         ./modules/base.nix
         ./hosts/goth-pinkie-pie
         ./modules/neovim.nix
-        ./modules/irc_daemon.nix
         home-manager.nixosModules.home-manager
         {
           home-manager.users.izzylan = {config, lib, pkgs, ...}:
