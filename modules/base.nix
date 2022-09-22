@@ -19,6 +19,10 @@
     fish = {
       enable = true;
     };
+
+    tmux = {
+      enable = true;
+    };
   };
 
 	time = {
