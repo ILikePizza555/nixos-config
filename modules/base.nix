@@ -6,6 +6,7 @@
     systemPackages = [
       pkgs.git
       pkgs.ripgrep
+      pkgs.tree
     ];
   };
 
