@@ -3,6 +3,7 @@
 {
   imports = [
     ../base.nix
+    ./hardware-configuration.nix
   ];
 
   boot = {
@@ -20,7 +21,7 @@
     openssh = {
       enable = true;
       passwordAuthentication = false;
-      permitRootLogin = false;
+      permitRootLogin = "no";
     };
   };
 
