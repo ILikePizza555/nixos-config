@@ -12,7 +12,7 @@
   };
 
   networking = {
-    hostName = "nev-systems";
+    hostName = "nev-systems-nixos";
     firewall = {
       allowedTCPPorts = [22 80 443 6667 6697];
     };
