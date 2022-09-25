@@ -1,14 +1,20 @@
-{config, pkgs}:
+{config, pkgs, ...}:
 
 {
   imports = [
     ../base.nix
   ];
 
-  networking = [
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+    };
+  };
+
+  networking = {
     hostName = "nev-systems";
     firewall = {
-      allowedTCPPorts = [22, 80, 443, 6667 6697];
+      allowedTCPPorts = [22 80 443 6667 6697];
     };
   };
 
@@ -16,7 +22,7 @@
     openssh = {
       enable = true;
       passwordAuthentication = false;
-    }
+    };
   };
 
   users = {
