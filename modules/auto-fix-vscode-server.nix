@@ -1,3 +1,5 @@
+{pkgs, lib, ...}:
+
 {
   systemd.user.services = {
     # vscode-server
