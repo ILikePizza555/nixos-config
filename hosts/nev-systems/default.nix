@@ -22,6 +22,7 @@
     openssh = {
       enable = true;
       passwordAuthentication = false;
+      permitRootLogin = false;
     };
   };
 
@@ -33,6 +34,7 @@
 			isNormalUser = true;
 			description = "Izzy Lancaster personal account";
 			extraGroups = ["wheel"];
+      hashedPassword = "$6$Lp7QUACZYJqIhOUA$IfdR5NX7.qQVf85M.m7S3ZWvIlDPsmG2i11S5MsmvPbK5140k8LenORAiFtNP9x4vssomGi6uGdpPccQzCwsu/";
 			openssh.authorizedKeys.keyFiles = [
 				../../keys/izzylan/pinkie-pie
 				../../keys/izzylan/ipad
