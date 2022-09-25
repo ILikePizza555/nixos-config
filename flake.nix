@@ -13,7 +13,7 @@
       specialArgs = inputs;
       modules = [
         ./hosts/goth-pinkie-pie
-        ./modules/neovim.nix
+        ./programs/neovim.nix
         home-manager.nixosModules.home-manager
         {
           home-manager.users.izzylan = {config, lib, pkgs, ...}:
