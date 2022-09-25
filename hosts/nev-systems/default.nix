@@ -6,9 +6,7 @@
   ];
 
   boot = {
-    loader = {
-      systemd-boot.enable = true;
-    };
+    loader.grub.device = "/dev/vda";
   };
 
   networking = {
