@@ -32,8 +32,6 @@
 	};
 
 	users = {
-		defaultUserShell = pkgs.fish;
-
 		users.izzylan = {
 			isNormalUser = true;
 			description = "Izzy Lancaster account";

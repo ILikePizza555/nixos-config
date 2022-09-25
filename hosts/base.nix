@@ -29,4 +29,8 @@
 	time = {
 		timeZone = "America/Los_Angeles";
 	};
+
+  users = {
+    defaultUserShell = pkgs.fish;
+  };
 }

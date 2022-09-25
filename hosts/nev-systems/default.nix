@@ -27,7 +27,6 @@
   };
 
   users = {
-    defaultUserShell = pkgs.fish; 
     mutableUsers = false;
 
     users.izzylan = {
