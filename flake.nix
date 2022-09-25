@@ -36,6 +36,7 @@
         specialArgs = inputs;
         modules = [
           ./hosts/nev-systems
+          ./profiles/neovim.nix
           home-manager.nixosModules.home-manager
           {
             home-manager = {
