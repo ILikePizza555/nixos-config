@@ -36,7 +36,7 @@
 
 		users.izzylan = {
 			isNormalUser = true;
-			description = "Izzy Lancaster personal account";
+			description = "Izzy Lancaster account";
 			extraGroups = ["wheel"];
 			openssh.authorizedKeys.keyFiles = [
 				../../keys/izzylan/pinkie-pie
