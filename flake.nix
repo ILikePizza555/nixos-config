@@ -13,6 +13,16 @@
 
   outputs = inputs@{ self, nixpkgs, home-manager, nixos-generators }:
   {
+    # Install iso with 
+    packages.x86_64-linux.install-iso = nixos-generators.nixosGenerate {
+      system = "x86_64-linux";
+      modules = [
+        ./hosts/base.nix
+        ./profiles/neovim.nix
+      ];
+      format = "install-iso";
+    };
+
     nixosConfigurations = {
       vm-goth-pinkie-pie = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
