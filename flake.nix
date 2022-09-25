@@ -12,7 +12,6 @@
       system = "x86_64-linux";
       specialArgs = inputs;
       modules = [
-        ./modules/base.nix
         ./hosts/goth-pinkie-pie
         ./modules/neovim.nix
         home-manager.nixosModules.home-manager
