@@ -14,6 +14,12 @@
 		};
 	};
 
+  environment = {
+    systemPackages = [
+      nixos-generators.defaultPackage.${pkgs.system}
+    ];
+  };
+
 	networking = {
 		hostName = "vm-goth-pinkie-pie";
 		firewall = {

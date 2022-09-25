@@ -12,27 +12,7 @@
   };
 
   outputs = inputs@{ self, nixpkgs, home-manager, nixos-generators }:
-  let
-    nev-systems-modules = [
-      ./hosts/nev-systems
-      home-manager.nixosModules.home-manager
-      {
-        home-manager = {
-          useGlobalPkgs = true;
-          useUserPackages = true;
-          users.izzylan = import ./users/izzylan.nix;
-        };
-      }
-    ];
-  in
   {
-    packages.x86_64-linux."nev-systems-install-iso" = nixos-generators.nixosGenerate {
-      system = "x86_64-linux";
-      specialArgs = inputs;
-      modules = nev-systems-modules;
-      format = "install-iso";
-    };
-
     nixosConfigurations = {
       vm-goth-pinkie-pie = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -54,7 +34,17 @@
       nev-systems = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = inputs;
-        modules = nev-systems-modules;
+        modules = [
+          ./hosts/nev-systems
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.izzylan = import ./users/izzylan.nix;
+            };
+          }
+        ];
       };
     };
   };
