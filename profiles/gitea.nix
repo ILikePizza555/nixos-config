@@ -11,6 +11,7 @@ in
     gitea = {
       enable = true;
       rootUrl = "https://${domain}/";
+      disableRegistration = true;
 
       # Gitea module automatically sets `services.mysql.ensureDatabases` and `services.mysql.ensureUsers`
       database = {
