@@ -5,19 +5,21 @@ let
 in
 {
   networking = {
-    firewall.allowedTCPPorts = [80,443];
+    firewall.allowedTCPPorts = [80 443];
   };
 
   services = {
     mysql = {
       ensureDatabases = [giteaDBName]; 
 
-      ensureUsers = {
-        name = giteaUsername;
-        ensurePermissions = {
-          "${giteaDBName}.*" = "ALL PRIVILEGES";
-        };
-      };
+      ensureUsers = [
+        {
+          name = giteaUsername;
+          ensurePermissions = {
+            "${giteaDBName}.*" = "ALL PRIVILEGES";
+          };
+        }
+      ];
     };
 
     gitea = {
