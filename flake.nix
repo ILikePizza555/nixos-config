@@ -47,6 +47,7 @@
         modules = [
           ./hosts/nev-systems
           ./profiles/neovim.nix
+          ./profiles/gitea.nix
           home-manager.nixosModules.home-manager
           {
             home-manager = {

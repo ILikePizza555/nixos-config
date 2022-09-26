@@ -13,7 +13,7 @@
   networking = {
     hostName = "nev-systems-nixos";
     firewall = {
-      allowedTCPPorts = [22 80 443 6667 6697];
+      allowedTCPPorts = [22];
     };
   };
 
@@ -22,6 +22,11 @@
       enable = true;
       passwordAuthentication = false;
       permitRootLogin = "no";
+    };
+
+    mysql = {
+      enable = true;
+      package = pkgs.mariadb;
     };
   };
 
