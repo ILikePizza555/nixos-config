@@ -15,7 +15,7 @@
     firewall = {
       # 22 - Opened for ssh
       # 80 443 - Opened for caddy
-      allowedTCPPorts = [22, 80, 443];
+      allowedTCPPorts = [22 80 443];
     };
   };
 
