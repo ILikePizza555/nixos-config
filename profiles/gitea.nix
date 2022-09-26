@@ -10,7 +10,7 @@ in
 
     gitea = {
       enable = true;
-      inherit domain;
+      rootUrl = "https://${domain}/";
 
       # Gitea module automatically sets `services.mysql.ensureDatabases` and `services.mysql.ensureUsers`
       database = {
