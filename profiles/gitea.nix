@@ -2,6 +2,7 @@
 let
   giteaUsername = "gitea";
   giteaDBName = "gitea";
+  domain = "git.nev.systems";
 in
 {
   networking = {
@@ -9,6 +10,10 @@ in
   };
 
   services = {
+    caddy.virtualHosts.${domain}.extraConfig = ''
+      reverse_proxy http://localhost:3000
+    '';
+
     mysql = {
       ensureDatabases = [giteaDBName]; 
 
@@ -25,7 +30,7 @@ in
     gitea = {
       enable = true;
       useWizard = true;
-      domain = "git.nev.systems";
+      inherit domain;
 
       database = {
         type = "mysql";
