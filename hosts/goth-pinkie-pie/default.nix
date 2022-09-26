@@ -23,7 +23,10 @@
 	networking = {
 		hostName = "vm-goth-pinkie-pie";
 		firewall = {
-			allowedTCPPorts = [22];
+      allowedTCPPorts = [22];
+      allowedTCPPortRanges = [
+        { from = 1000; to = 1500; }
+      ];
 		};
 	};
 
