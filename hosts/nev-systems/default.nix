@@ -1,4 +1,4 @@
-{config, pkgs, ...}:
+{config, pkgs, nev-systems-site, ...}:
 
 {
   imports = [
@@ -20,12 +20,25 @@
   };
 
   services = {
-    caddy.enable = true;
-
     openssh = {
       enable = true;
       passwordAuthentication = false;
       permitRootLogin = "no";
+    };
+
+    nginx = {
+      enable = true;
+      recommendedGzipSettings = true;
+      recommendedOptimisation = true;
+      recommendedProxySettings = true;
+      recommendedTlsSettings = true;
+
+      virtualHosts = {
+        "nev.systems" = {
+          enableACME = true;
+          forceSSL = true;
+          root = nev-systems-site.packages.${pkgs.system}.default;
+      };
     };
 
     mysql = {
