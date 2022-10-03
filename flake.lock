@@ -1,5 +1,19 @@
 {
   "nodes": {
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1659877975,
+        "narHash": "sha256-zllb8aq3YO3h8B/U0/J1WBgAL8EX5yWf5pMj3G0NAmc=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "c0e246b9b83f637f4681389ecabcb2681b4f3af0",
+        "type": "github"
+      },
+      "original": {
+        "id": "flake-utils",
+        "type": "indirect"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -19,6 +33,29 @@
         "owner": "nix-community",
         "repo": "home-manager",
         "type": "github"
+      }
+    },
+    "nev-systems-site": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1664769001,
+        "narHash": "sha256-oFeB0aqspxjoMr8Cpk2xniGyXKT9pmdayxmm7cmtChk=",
+        "ref": "refs/heads/master",
+        "rev": "425dc40b62a584498de802b8a1e86faefc36c8a3",
+        "revCount": 10,
+        "submodules": true,
+        "type": "git",
+        "url": "https://git.nev.systems/izzylan/nev-systems-site.git"
+      },
+      "original": {
+        "submodules": true,
+        "type": "git",
+        "url": "https://git.nev.systems/izzylan/nev-systems-site.git"
       }
     },
     "nixlib": {
@@ -75,6 +112,7 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "nev-systems-site": "nev-systems-site",
         "nixos-generators": "nixos-generators",
         "nixpkgs": "nixpkgs"
       }

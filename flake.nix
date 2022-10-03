@@ -5,13 +5,19 @@
       url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
     };
-     nixos-generators = {
+    nixos-generators = {
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     }; 
+    nev-systems-site = {
+      url = "https://git.nev.systems/izzylan/nev-systems-site.git";
+      type = "git";
+      submodules = true;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nixos-generators }:
+  outputs = inputs@{ self, nixpkgs, home-manager, nixos-generators, nev-systems-site }:
   {
     # Install iso with 
     packages.x86_64-linux.install-iso = nixos-generators.nixosGenerate {
