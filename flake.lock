@@ -22,11 +22,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1664573442,
-        "narHash": "sha256-AovlSIuJfMf8n9QLNUVtsCul+NVHIoen7APH2fLls3k=",
+        "lastModified": 1664783440,
+        "narHash": "sha256-KlMwR7mUf5h8MPnzV7nGFUAt6ih/euW5xgvZ5x+hwvI=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "a7f0cc2d7b271b4a5df9b9e351d556c172f7e903",
+        "rev": "e4e639dd4dc3e431aa5b5f95325f9a66ac7e0dd9",
         "type": "github"
       },
       "original": {
@@ -43,15 +43,17 @@
         ]
       },
       "locked": {
-        "lastModified": 1664769001,
-        "narHash": "sha256-xTBNhVdoh29Z21bcdMcKsRYVA78/kW2YQdKHB3k/Ons=",
+        "lastModified": 1664783434,
+        "narHash": "sha256-hQaeB+m1nwDqhUkNnEP4VgMXcQWAM683j1du+tZiWKI=",
         "ref": "refs/heads/master",
-        "rev": "425dc40b62a584498de802b8a1e86faefc36c8a3",
-        "revCount": 10,
+        "rev": "5fbcc3e528becb51fa15e55ea3585a65b33fcf4f",
+        "revCount": 11,
+        "submodules": true,
         "type": "git",
         "url": "https://git.nev.systems/izzylan/nev-systems-site.git"
       },
       "original": {
+        "submodules": true,
         "type": "git",
         "url": "https://git.nev.systems/izzylan/nev-systems-site.git"
       }
