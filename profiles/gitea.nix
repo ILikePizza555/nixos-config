@@ -4,9 +4,13 @@ let
 in
 {
   services = {
-    caddy.virtualHosts.${domain}.extraConfig = ''
-      reverse_proxy http://localhost:3000
-    '';
+    nginx.virtualHosts.${domain} = {
+      enableACME = true;
+      forceSSL = true;
+      locations."/" = {
+        proxyPass = "http://localhost:3000";
+      };
+    };
 
     gitea = {
       enable = true;
