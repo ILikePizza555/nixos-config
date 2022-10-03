@@ -66,9 +66,7 @@
   security = {
     acme = {
       acceptTerms = true;
-      certs = {
-        "nev.systems".email = "avrisaac555+acme-nev-systems@gmail.com";
-      };
+      defaults.email = "avrisaac555+acme-nev-systems@gmail.com";
     };
   };
   
