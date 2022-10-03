@@ -12,7 +12,6 @@
 
   # We have to enable nixFlakes since this is a flake
   nix = {
-    package = pkgs.nixFlakes;
 		extraOptions = ''experimental-features = nix-command flakes'';
   };
 
