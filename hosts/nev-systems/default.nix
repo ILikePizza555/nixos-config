@@ -63,5 +63,14 @@
 		};
   };
 
+  security = {
+    acme = {
+      acceptTerms = true;
+      certs = {
+        "nev.systems".email = "avrisaac555+acme-nev-systems@gmail.com";
+      };
+    };
+  };
+  
   system.stateVersion = "22.05";
 }
