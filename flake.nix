@@ -10,7 +10,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     }; 
     nev-systems-site = {
-      url = "https://git.nev.systems/izzylan/nev-systems-site.git";
+      url = "git+https://git.nev.systems/izzylan/nev-systems-site.git";
       type = "git";
       submodules = true;
       inputs.nixpkgs.follows = "nixpkgs";
