@@ -38,6 +38,7 @@
           enableACME = true;
           forceSSL = true;
           root = nev-systems-site.packages.${pkgs.system}.default;
+        };
       };
     };
 
