@@ -52,6 +52,7 @@
           ./hosts/nev-systems
           ./profiles/neovim.nix
           ./profiles/gitea.nix
+          ./profiles/ircd-ergo.nix
           home-manager.nixosModules.home-manager
           {
             home-manager = {
