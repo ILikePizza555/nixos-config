@@ -19,6 +19,8 @@
 			defaultEditor = true;
 			configure = {
 				customRC = ''
+          colorscheme nightfox
+
           set autoindent smartindent noexpandtab tabstop=2 shiftwidth=2
 					set relativenumber
 					syntax on
