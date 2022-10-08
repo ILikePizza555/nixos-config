@@ -26,14 +26,17 @@
           nnoremap <leader>ff <cmd>Telescope find_files<cr>
           nnoremap <leader>fg <cmd>Telescope live_grep<cr>
           nnoremap <leader>fb <cmd>Telescope buffers<cr>
-          nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+          nnoremap <leader>fh <cmd>Telescope help_tdags<cr>
 				'';
 				packages.myVimPackage = with pkgs.vimPlugins; {
 					start = [
+            nightfox-nvim
 						vim-nix
 						indent-blankline-nvim
 						plenary-nvim
 					  telescope-nvim
+            nvim-web-devicons
+            barbar-nvim
 					];
 				};
 			};
