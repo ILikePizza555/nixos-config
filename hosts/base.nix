@@ -7,6 +7,7 @@
       pkgs.git
       pkgs.ripgrep
       pkgs.tree
+      pkgs.age
     ];
   };
 
