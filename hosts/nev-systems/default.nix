@@ -73,6 +73,11 @@
     acme = {
       acceptTerms = true;
       defaults.email = "avrisaac555+acme-nev-systems@gmail.com";
+      certs."nev.systems" = {
+        domain = "*.nev.systems";
+        dnsProvider = "rfc2136";
+        credentialsFile = config.age.secrets.namecheapApi.path;
+      };
     };
   };
   
