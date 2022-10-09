@@ -89,4 +89,13 @@ in
       };
     };
   };
+
+  # Add the acme group to the service so that we can read the certificates
+  systemd = {
+    services.ergochat = {
+      serviceConfig = {
+        Group = "acme";
+      };
+    };
+  };
 }
