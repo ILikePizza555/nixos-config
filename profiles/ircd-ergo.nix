@@ -28,7 +28,8 @@ in
         };
         datastore.mysql = {
           enabled = true;
-          socket-path = /run/mysqld/mysqld.sock;
+          # Hardcoded path in the mysql nix module. Not expecting this to change
+          socket-path = "/run/mysqld/mysqld.sock";
           user = dbUsername;
           history-database = dbName;
         };
