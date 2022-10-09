@@ -1,6 +1,10 @@
 {
 	inputs = {
 		nixpkgs.url = github:NixOS/nixpkgs;
+    agenix.url = {
+      url = github:ryantm/agenix;
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
@@ -17,7 +21,7 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nixos-generators, nev-systems-site }:
+  outputs = inputs@{ self, nixpkgs, home-manager, nixos-generators, nev-systems-site, agenix }:
   {
     # Install iso with 
     packages.x86_64-linux.install-iso = nixos-generators.nixosGenerate {
@@ -52,6 +56,7 @@
         specialArgs = inputs;
         modules = [
           ./hosts/nev-systems
+          agenix.nixosModule
           ./profiles/neovim.nix
           ./profiles/gitea.nix
           ./profiles/ircd-ergo.nix
