@@ -5,10 +5,12 @@
       url = github:nix-community/home-manager;
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # For building my custom nixos install iso
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
     }; 
+    # For building nev-systems system
     nev-systems-site = {
       url = "git+https://git.nev.systems/izzylan/nev-systems-site.git?submodules=1";
       inputs.nixpkgs.follows = "nixpkgs";
