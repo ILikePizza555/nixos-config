@@ -4,7 +4,8 @@
 
 let
   host = "irc.nev.systems";
-  certCfg = config.security.acme.certs."nev.systems";
+  acmeHost = "nev.systems";
+  certCfg = config.security.acme.certs.${acmeHost};
   tls = {
     cert = certCfg.directory + "/cert.pem";
     key = certCfg.directory + "/key.pem";
@@ -84,7 +85,7 @@ in
 
     nginx.virtualHosts.${host} = {
       enableACME = true;
-      acmeRoot = null;
+      useACMEHost = acmeHost;
       locations."/" = {
         return = "204";
       };
