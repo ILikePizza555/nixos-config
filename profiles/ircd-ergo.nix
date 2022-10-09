@@ -66,6 +66,7 @@ in
           };
           sts.enabled = true;
           websockets.allowed-origins = [ host ];
+          enforce-utf8 = true;
         };
         roleplay.enabled = true;
       };
