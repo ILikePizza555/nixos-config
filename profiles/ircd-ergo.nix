@@ -84,7 +84,6 @@ in
     };
 
     nginx.virtualHosts.${host} = {
-      enableACME = true;
       useACMEHost = acmeHost;
       locations."/" = {
         return = "204";

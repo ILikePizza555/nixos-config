@@ -5,7 +5,6 @@ in
 {
   services = {
     nginx.virtualHosts.${domain} = {
-      enableACME = true;
       # Use wildcard certificate
       useACMEHost = "nev.systems";
       forceSSL = true;

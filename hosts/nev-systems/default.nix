@@ -41,7 +41,6 @@
 
       virtualHosts = {
         "nev.systems" = {
-          enableACME = true;
           # Use the wildcard certificate
           useACMEHost = "nev.systems";
           forceSSL = true;
@@ -68,6 +67,10 @@
         ../../keys/izzylan/pinkie-pie
         ../../keys/izzylan/ipad
       ];
+    };
+
+    users.nginx = {
+      extraGroups = ["acme"];
     };
   };
 
