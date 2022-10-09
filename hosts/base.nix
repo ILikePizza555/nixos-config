@@ -7,7 +7,10 @@
       pkgs.git
       pkgs.ripgrep
       pkgs.tree
+      # For encrypting secrets
       pkgs.age
+      # Syntax highlighted `cat`
+      pkgs.bat 
     ];
   };
 
