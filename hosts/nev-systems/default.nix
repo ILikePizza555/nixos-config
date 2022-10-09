@@ -42,6 +42,8 @@
       virtualHosts = {
         "nev.systems" = {
           enableACME = true;
+          # Use the wildcard certificate
+          acmeRoot = null;
           forceSSL = true;
           root = nev-systems-site.packages.${pkgs.system}.default;
         };
@@ -75,7 +77,7 @@
       defaults.email = "avrisaac555+acme-nev-systems@gmail.com";
       certs."nev.systems" = {
         domain = "*.nev.systems";
-        dnsProvider = "rfc2136";
+        dnsProvider = "namecheap";
         credentialsFile = config.age.secrets.namecheapApi.path;
       };
     };
