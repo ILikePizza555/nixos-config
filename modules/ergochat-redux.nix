@@ -44,7 +44,7 @@ in
             };
           };
 
-          unix-bind-mode = mkSimpleOption types.str "0777" "The permissions for unix socket listeners";
+          unix-bind-mode = mkSimpleOption types.int 0777 "The permissions for unix socket listeners";
 
           tor-listeners = mkOption {
             type = mkSubmoduleFromOptions {
@@ -52,7 +52,7 @@ in
               vhost = mkSimpleOption types.str "tor-network.onion" "The hostname to be displayed for Tor connections";
               max-connections = mkSimpleOption types.int 64 "The limit of tor connections, 0 is no limit";
               throttle-duration = mkSimpleOption types.str "10m" "limit how many connection attempts are allowed at once";
-              max-connections-per-duration mkSimpleOption types.int 64 "set to 0 to disable throttling";
+              max-connections-per-duration = mkSimpleOption types.int 64 "set to 0 to disable throttling";
             };
             default = {};
           };
@@ -64,6 +64,7 @@ in
               port = mkSimpleOption types.int 6697 "TLS port, you should be listening on this port";
               preload = mkSimpleOption types.bool false "should clients include this STS policy when they ship their inbuilt preload lists?";
             };
+            default = {};
           };
 
           websocketsAllowedOrigins = mkOption {
@@ -80,7 +81,7 @@ in
           };
 
           casemapping = lib.mkOption {
-            type = types.enum ["precis", "ascii", "permissive"];
+            type = types.enum ["precis" "ascii" "permissive"];
             default = "precis";
           };
 
@@ -146,18 +147,19 @@ in
                 default = {};
               };
             };
+            default = {};
           };
 
           ip-check-script = mkOption {
             type = mkSubmoduleFromOptions {
               enabled = mkSimpleOption types.bool false "Whether to enable the pluggable IP ban mechanism";
               command = mkSimpleOption types.str "" "Command to run the IP ban checking script";
-              args = mkSimpleOption types.list [] "List of args to pass to the command.";
+              args = mkSimpleOption (types.listOf types.str) [] "List of args to pass to the command.";    
               kill-timeout = mkSimpleOption types.str "9s" "Timeout for process execution";
               max-concurrency = mkSimpleOption types.int 64 "How many scripts are allowed to run at once. 0 for no limit.";
               exempt-sasl = mkSimpleOption types.bool false "If true, only check anonymous connections";
             };
-            default = {}
+            default = {};
           };
 
           ip-cloaking = mkOption {
@@ -178,18 +180,25 @@ in
           # max-line-len = mkSimpleOption (types.int) 512 "The maximum (non-tag) length of an IRC line. DO NOT CHANGE THIS ON A PUBLIC SERVER."
           suppress-luser = mkSimpleOption types.bool false "send all 0's as the LUSERS (user counts) output to non-operators";
         };
+        default = {};
+      };
+      datastore = mkOption {
+        type = mkSubmoduleFromOptions {
+          path = mkSimpleOption types.str "ircd.db" "path to the datastore";
+        };
+        default = {};
       };
     };
   };
 
-  config = lib.mkIf cfg.enable let
-  in
+  config = lib.mkIf cfg.enable
   {
-    environment.etc."ergo.yaml".source = lib.writeTextFile {
+    environment.etc."ergo.yaml".source = pkgs.writeTextFile {
       name = "ergo.yaml";
-      text = lib.toYAML {
+      text = builtins.toJSON {
         network.name = cfg.networkName;
         server = cfg.server;
+        datastore = cfg.datastore;
       };
     };
   };
