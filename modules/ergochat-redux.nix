@@ -44,7 +44,7 @@ in
           };
         };
 
-        unix-bind-mode = mkSimpleOption types.int 0777 "The permissions for unix socket listeners";
+        unix-bind-mode = mkSimpleOption types.int 0511 "The permissions for unix socket listeners";
 
         tor-listeners = mkSubmoduleOption {
           require-sasl = mkSimpleOption types.bool false "Whether tor clients must authenticate with SASL.";
@@ -110,7 +110,7 @@ in
 
         max-sendq = mkSimpleOption types.str "96k" "maximum length of clients' sendQ in bytes";
 
-        compatability = mkSubmoduleOption {
+        compatibility = mkSubmoduleOption {
           force-trailing = mkSimpleOption types.bool true "Whether the final parameter of some messages be a trailing parameter.";
           send-unprefixed-sasl = mkSimpleOption types.bool true "Don't send SASL messages with the server name as a prefix.";
           allow-truncation = mkSimpleOption types.bool false "Whether long messages should be truncated.";
@@ -139,7 +139,8 @@ in
           enabled = mkSimpleOption types.bool false "Whether to enable the pluggable IP ban mechanism";
           command = mkSimpleOption types.str "" "Command to run the IP ban checking script";
           args = mkSimpleOption (types.listOf types.str) [] "List of args to pass to the command.";    
-          kill-timeout = mkSimpleOption types.str "9s" "Timeout for process execution";
+          timeout = mkSimpleOption types.str "9s" "timeout for process execution, after which we send a SIGTERM";
+          kill-timeout = mkSimpleOption types.str "1s" "how long after the SIGTERM before we follow up with a SIGKILL";
           max-concurrency = mkSimpleOption types.int 64 "How many scripts are allowed to run at once. 0 for no limit.";
           exempt-sasl = mkSimpleOption types.bool false "If true, only check anonymous connections";
         };
@@ -157,7 +158,7 @@ in
         output-path = mkSimpleOption (types.nullOr types.str) null "Where to write files to the disk";
         override-services-hostname = mkSimpleOption (types.nullOr types.str) null "The hostname to be used by services (i.e. NickServ)";
         # max-line-len = mkSimpleOption (types.int) 512 "The maximum (non-tag) length of an IRC line. DO NOT CHANGE THIS ON A PUBLIC SERVER."
-        suppress-luser = mkSimpleOption types.bool false "send all 0's as the LUSERS (user counts) output to non-operators";
+        suppress-lusers = mkSimpleOption types.bool false "send all 0's as the LUSERS (user counts) output to non-operators";
       };
 
       datastore = mkSubmoduleOption {
