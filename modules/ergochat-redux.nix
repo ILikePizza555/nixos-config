@@ -198,6 +198,32 @@ in
           max-lines = mkSimpleOption types.int 100  "Line limit for limit for multiline capabilities. Zero means no limit.";
         };
       };
+
+      logging = mkOption {
+        type = types.listOf (mkSubmoduleFromOptions {
+          level = mkOption {
+            type = types.str;
+            description = "Sets the logging level of the logger.";
+            example = "info";
+          };
+          method = mkOption {
+            type = types.str;
+            description = "Where the logger should log";
+            example = "stderr";
+          };
+          type = mkOption {
+            type = types.str;
+            example = "* -userinput -useroutput";
+          };
+        });
+        default = [
+          {
+            level = "info";
+            method = "stderr";
+            type = "* -userinput -useroutput";
+          }
+        ];
+      };
     };
   };
 
@@ -210,6 +236,7 @@ in
         server = cfg.server;
         datastore = cfg.datastore;
         limits = cfg.limits;
+        logging = cfg.logging;
       };
     };
   };
