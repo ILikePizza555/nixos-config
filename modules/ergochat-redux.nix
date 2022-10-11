@@ -2,7 +2,7 @@
 {config, lib, pkgs, ...}:
 let
   mkSubmoduleFromOptions = options: lib.types.submodule { inherit options; };
-  mkSubmoduleOption = options: mkOption { type = mkSubmoduleFromOptions options; default = {}; };
+  mkSubmoduleOption = options: lib.mkOption { type = mkSubmoduleFromOptions options; default = {}; };
   mkSimpleOption = type: default: description: lib.mkOption { inherit type; inherit default; inherit description; };
   cfg = config.services.ergochat-redux;
 in
@@ -163,24 +163,39 @@ in
       datastore = mkSubmoduleOption {
         path = mkSimpleOption types.str "ircd.db" "path to the datastore";
         autoupgrade = mkSimpleOption types.bool true "if the database schema requires an upgrade, `autoupgrade` will attempt to perform it automatically on startup.";
-        mysql = mkOption {
-          type = mkSubmoduleFromOptions {
-            enabled = mkSimpleOptions types.bool false "Whether to enable mysql for persistent history.";
-            ensureDB = mkSimpleOptions types.bool false "Whether to have nix manage the database. This invalidates `host`, `port`, and `socket-path`.";
-            host = mkSimpleOption types.str "localhost" "";
-            port = mkSimpleOption types.port 3306 "";
-            socket-path = mkSimpleOption (types.nullOr types.path) "";
-            user = mkSimpleOption types.str "ergo" "Database user";
-            password = mkSimpleOption types.str "hunter2" "Database password";
-            history-database = mkSimpleOption types.str "ergo_history" "Database name";
-            timeout = mkSimpleOption types.str "3s" "";
-            max-conns = mkSimpleOption types.int 4 "";
-            conn-max-lifetime = mkOption {
-              type = types.nullOr types.str;
-              default = null; 
-              example = "180s";
-            };
+        mysql = mkSubmoduleOption {
+          enabled = mkSimpleOption types.bool false "Whether to enable mysql for persistent history.";
+          ensureDB = mkSimpleOption types.bool false "Whether to have nix manage the database. This invalidates `host`, `port`, and `socket-path`.";
+          host = mkSimpleOption types.str "localhost" "";
+          port = mkSimpleOption types.port 3306 "";
+          socket-path = mkSimpleOption (types.nullOr types.path) null "";
+          user = mkSimpleOption types.str "ergo" "Database user";
+          password = mkSimpleOption types.str "hunter2" "Database password";
+          history-database = mkSimpleOption types.str "ergo_history" "Database name";
+          timeout = mkSimpleOption types.str "3s" "";
+          max-conns = mkSimpleOption types.int 4 "";
+          conn-max-lifetime = mkOption {
+            type = types.nullOr types.str;
+            default = null; 
+            example = "180s";
           };
+        };
+      };
+
+      limits = mkSubmoduleOption {
+        nicklen               = mkSimpleOption types.int 32   "The max nick length allowed";
+        identlen              = mkSimpleOption types.int 20   "The max ident length allowed";
+        channellen            = mkSimpleOption types.int 64   "The max channel name length allowed";
+        awaylen               = mkSimpleOption types.int 390  "The maximum length of an away message";
+        kicklen               = mkSimpleOption types.int 390  "The maximum length of a kick message";
+        topiclen              = mkSimpleOption types.int 390  "The maximum length of a channel topic";
+        monitor-entries       = mkSimpleOption types.int 100  "The maximum number of monitor entries a client can have";
+        whowas-entries        = mkSimpleOption types.int 100  "Whowas entries to store";
+        chan-list-modes       = mkSimpleOption types.int 60   "Maximum length of channel lists";
+        registration-messages = mkSimpleOption types.int 1024 "Maximum number of messages t o accept during registration";
+        multiline = mkSubmoduleOption {
+          max-bytes = mkSimpleOption types.int 4096 "Message length limit in bytes for multiline capabilities. Zero means disabled.";
+          max-lines = mkSimpleOption types.int 100  "Line limit for limit for multiline capabilities. Zero means no limit.";
         };
       };
     };
@@ -194,6 +209,7 @@ in
         network.name = cfg.networkName;
         server = cfg.server;
         datastore = cfg.datastore;
+        limits = cfg.limits;
       };
     };
   };
