@@ -219,7 +219,7 @@ in
                 password = mkOption { type = types.str; };
               });
               default = null;
-              description = "use an MTA/smarthost instead of sending email directly"
+              description = "use an MTA/smarthost instead of sending email directly";
             };
 
             blacklist-regexes = mkOption {
@@ -295,10 +295,10 @@ in
         };
       };
 
-      channel = mkSubmoduleOption {
+      channels = mkSubmoduleOption {
         default-modes = mkSimpleOption types.str "+ntC" "modes that are set when new channels are created";
         max-channels-per-client = mkSimpleOption types.int 100 "if this is true, new channels can only be created by operators with the `chanreg` operator capability";
-        registration = mkSubmoduleOption = {
+        registration = mkSubmoduleOption {
           enabled = mkSimpleOption types.bool true "Can users register new channels?";
           operator-only = mkSimpleOption types.bool false "restrict new channel registrations to operators only";
           max-channels-per-accoun = mkSimpleOption types.int 15 "how many channels can each account register";
@@ -308,7 +308,7 @@ in
       };
 
       oper-classes = mkOption {
-        type = types.attrsOf (mkSubmoduleOption {
+        type = types.attrsOf (mkSubmoduleFromOptions {
           title = mkOption {
             type = types.str;
             description = "title shown in WHOIS";
@@ -338,7 +338,7 @@ in
       };
 
       opers = mkOption {
-        type = types.attrsOf (mkSubmoduleOption {
+        type = types.attrsOf (mkSubmoduleFromOptions {
           class = mkOption { 
             type = types.str;
             description = "Which capabilities this oper has access to";
@@ -395,9 +395,9 @@ in
       };
 
       debug = mkSubmoduleOption {
-        recover-from-errors = mkSimpleOption types.bool true "when enabled, Ergo will attempt to recover from certain kinds of client-triggered runtime errors that would normally crash the server. this makes the server more resilient to DoS, but could result in incorrect behavior."
+        recover-from-errors = mkSimpleOption types.bool true "when enabled, Ergo will attempt to recover from certain kinds of client-triggered runtime errors that would normally crash the server. this makes the server more resilient to DoS, but could result in incorrect behavior.";
 
-        pprof-listener: mkOption {
+        pprof-listener = mkOption {
           type = types.str;
           default = "";
           example = "localhost:6060";
@@ -476,12 +476,12 @@ in
       };
 
       extjwt = mkOption {
-        type = types.nullOr (mkSubmoduleOption {
+        type = types.nullOr (mkSubmoduleFromOptions {
           expiration = mkSimpleOption types.str "45s" "Expiration time for the token";
           secret = mkSimpleOption (types.nullOr types.str) null "Configure token to be signed with an HMAC and a symmetric secret";
           rsa-private-key-file = mkSimpleOption (types.nullOr types.str) null "Configure token to be signed with RSA private key";
           services = mkOption {
-            type = types.attrsOf (mkSubmoduleOption {
+            type = types.attrsOf (mkSubmoduleFromOptions {
               expiration = mkOption { type = type.str; };
               secret = mkSimpleOption { type = types.nullOr types.str; };
               rsa-private-key-file = mkSimpleOption { type = types.nullOr types.str; };
@@ -501,13 +501,13 @@ in
         chathistory-maxmessages = mkSimpleOption types.int 1000 "The maximum number of CHATHISTORY messages that can be requested at once. (0 disables support for CHATHISTORY)";
         znc-maxmessages = mkSimpleOption types.int 2048 "Maximum number of messages that can be replayed at once during znc emulation";
         restrictions = mkSubmoduleOption {
-          expire-time = types.str "1w" "if this is set, messages older than this cannot be retrieved by anyone (and will eventually be deleted from persistent storage, if that's enabled)";
-          query-cutoff = (types.enum ["none" "registration-time" "join-time"]) "none" "this restricts access to channel history (it can be overridden by channel owners)";
-          grace-period = types.str "1h" "if query-cutoff is set to 'registration-time', this allows retrieval of messages that are up to 'grace-period' older than the above cutoff. if you use 'registration-time', this is recommended to allow logged-out users to query history after disconnections.";
+          expire-time = mkSimpleOption types.str "1w" "if this is set, messages older than this cannot be retrieved by anyone (and will eventually be deleted from persistent storage, if that's enabled)";
+          query-cutoff = mkSimpleOption (types.enum ["none" "registration-time" "join-time"]) "none" "this restricts access to channel history (it can be overridden by channel owners)";
+          grace-period = mkSimpleOption types.str "1h" "if query-cutoff is set to 'registration-time', this allows retrieval of messages that are up to 'grace-period' older than the above cutoff. if you use 'registration-time', this is recommended to allow logged-out users to query history after disconnections.";
         };
-        persistent = mkSubmoduleOption let
+        persistent = let
           optEnum = types.enum ["disabled" "opt-in" "opt-out" "mandatory"];
-        in {
+        in mkSubmoduleOption {
           enabled = mkSimpleOption types.bool false "Whether to enable the storage of history messages in a persistend database";
           unregistered-channels = mkSimpleOption types.bool false "Whether to store unregistered channel messages in the persistent database";
           registered-channels = mkSimpleOption optEnum "opt-out" "Default history storage setting for registered channels";
