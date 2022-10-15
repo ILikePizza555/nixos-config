@@ -5,6 +5,24 @@ let
   mkSubmoduleOption = options: lib.mkOption { type = mkSubmoduleFromOptions options; default = {}; };
   mkSimpleOption = type: default: description: lib.mkOption { inherit type; inherit default; inherit description; };
   cfg = config.services.ergochat-redux;
+
+  operCapabilitiesEnum = lib.types.enum [
+    "kill" 
+    "ban"
+    "nofakelag"
+    "relaymsg"
+    "vhosts"
+    "sajoin"
+    "samode"
+    "snomasks"
+    "roleplay"
+    "rehash"
+    "accreg"
+    "chanreg"
+    "history"
+    "defcon"
+    "massmessage"
+  ];
 in
 {
   options = with lib; {
@@ -161,43 +179,193 @@ in
         suppress-lusers = mkSimpleOption types.bool false "send all 0's as the LUSERS (user counts) output to non-operators";
       };
 
-      datastore = mkSubmoduleOption {
-        path = mkSimpleOption types.str "ircd.db" "path to the datastore";
-        autoupgrade = mkSimpleOption types.bool true "if the database schema requires an upgrade, `autoupgrade` will attempt to perform it automatically on startup.";
-        mysql = mkSubmoduleOption {
-          enabled = mkSimpleOption types.bool false "Whether to enable mysql for persistent history.";
-          ensureDB = mkSimpleOption types.bool false "Whether to have nix manage the database. This invalidates `host`, `port`, and `socket-path`.";
-          host = mkSimpleOption types.str "localhost" "";
-          port = mkSimpleOption types.port 3306 "";
-          socket-path = mkSimpleOption (types.nullOr types.path) null "";
-          user = mkSimpleOption types.str "ergo" "Database user";
-          password = mkSimpleOption types.str "hunter2" "Database password";
-          history-database = mkSimpleOption types.str "ergo_history" "Database name";
-          timeout = mkSimpleOption types.str "3s" "";
-          max-conns = mkSimpleOption types.int 4 "";
-          conn-max-lifetime = mkOption {
-            type = types.nullOr types.str;
-            default = null; 
-            example = "180s";
+      accounts = mkSubmoduleOption {
+        authentication-enabled = mkSimpleOption types.bool true "Whether authentication is enabled (can users log into existing accounts?)";
+
+        registration = mkSubmoduleOption {
+          enabled = mkSimpleOption types.bool true "can users register new accounts for themselves? if this is false, operators with the `accreg` capability can still create accounts with `/NICKSERV SAREGISTER`";
+          allow-before-connection = mkSimpleOption types.bool true "can users use the REGISTER command to register before fully connecting?";
+
+          throttling = mkSubmoduleOption {
+            enabled = mkSimpleOption types.bool true "Enable global throttle on new account creation.";
+            duration = mkSimpleOption types.str "10m" "Window";
+            max-attempts = mkSimpleOption types.int 30 "number of attempts allowed within the window";
           };
+
+          bcrypt-cost = mkSimpleOption types.int 4 "Bcrypt cost to use for account passwords. 4 is the minimum allowed by the bcrypt library";
+          verify-timeout = mkSimpleOption types.str "32h" "Length of time a user has to verify their account before it can be re-registered";
+
+          email-verification = mkSubmoduleOption {
+            enabled = mkSimpleOption types.bool false "Enable email verification for account registrations";
+            sender = mkSimpleOption types.str "admin@my.network" "Sender email address";
+            require-tls = mkSimpleOption types.bool true "";
+            helo-domain = mkSimpleOption types.str "my.network" "";
+
+            dkim = mkOption {
+              type = types.nullOr (mkSubmoduleFromOptions {
+                domain = mkOption { type = types.str; };
+                selector = mkOption { type = types.str; };
+                key-file = mkOption { type = types.path; };
+              });
+              default = null;
+              description = "options to enable DKIM signing of outgoing emails";
+            };
+
+            mta = mkOption {
+              type = types.nullOr (mkSubmoduleFromOptions {
+                server = mkOption { type = types.str; };
+                port = mkOption { type = types.int; };
+                username = mkOption { type = types.str; };
+                password = mkOption { type = types.str; };
+              });
+              default = null;
+              description = "use an MTA/smarthost instead of sending email directly"
+            };
+
+            blacklist-regexes = mkOption {
+              type = types.listOf types.str;
+              default = [];
+            };
+
+            timeout = mkSimpleOption types.str "60s" "";
+
+            password-reset = mkSubmoduleOption {
+              enabled = mkSimpleOption types.bool false "Enable email-based password reset.";
+              cooldown = mkSimpleOption types.str "1h" "Time before allowing resending the email";
+              timeout = mkSimpleOption types.str "1d" "Time for which a password reset code is valid";
+            };
+          };
+        };
+
+        login-throttling = mkSubmoduleOption {
+          enabled = mkSimpleOption types.bool true "Enable login-throttling";
+          duration = mkSimpleOption types.str "1m" "Window";
+          max-attempts = mkSimpleOption types.int 3 "Number of attempts allowed within the window";
+        };
+
+        skip-server-password = mkSimpleOption types.bool false "Allow a client that fully authenticates with SASL to not send PASS as well.";
+
+        login-via-pass-command = mkSimpleOption types.bool true "Allow older clients that don't support SASL to authenticate with the PASS command";
+
+        require-sasl = mkSubmoduleOption {
+          enabled = mkSimpleOption types.bool false "if this is enabled, all clients must authenticate with SASL while connecting";
+          exempted = mkSimpleOption (types.listOf types.str) [ "localhost" ] "IPs/CIDRs which are exempted from the account requirement";
+        };
+
+        nick-reservation = mkSubmoduleOption {
+          enabled = mkSimpleOption types.bool true "Is there any enforcement of reserved nicknames?";
+          additional-nick-limit = mkSimpleOption types.int 0 "how many nicknames, in addition to the account name, can be reserved";
+          method = mkSimpleOption (types.enum ["strict" "optional"]) "strict" " method describes how nickname reservation is handled";
+          allow-custom-enforcement = mkSimpleOption types.bool false "allow users to set their own nickname enforcement status";
+          guest-nickname-format = mkSimpleOption types.str "Guest-*" "format for guest nicknames";
+          force-guest-format = mkSimpleOption types.bool false "when enabled, forces users not logged into an account to use a nickname matching the guest template";
+          force-nick-equals-account = mkSimpleOption types.bool true "when enabled, forces users logged into an account to use the account name as their nickname";
+          forbid-anonymous-nick-changes = mkSimpleOption types.bool false "parallel setting to force-nick-equals-account: if true, this forbids anonymous users (i.e., users not logged into an account) to change their nickname after the initial connection is complete";
+        };
+
+        multiclient = mkSubmoduleOption {
+          enabled = mkSimpleOption types.bool true "when enabled, a new connection that has authenticated with SASL can associate itself with an existing client";
+          allowed-by-default = mkSimpleOption types.bool true "if this is disabled, clients have to opt in to bouncer functionality using nickserv or the cap system. if it's enabled, they can opt outvia nickserv ";
+          always-on = mkSimpleOption (types.enum ["disabled" "opt-in" "opt-out" "mandatory"]) "opt-in" "whether to allow clients that remain on the server even when they have no active connections";
+          auto-away = mkSimpleOption (types.enum ["disabled" "opt-in" "opt-out" "mandatory"]) "opt-in" "whether to mark always-on clients away when they have no active connections";
+          always-on-expiration = mkOption {
+            type = types.str;
+            default = "0"; 
+            description = "QUIT always-on clients from the server if they go this long without connecting (use 0 or omit for no expiration)";
+            example = "90d";
+          };
+        };
+
+        vhosts = mkSubmoduleOption {
+          enabled = mkSimpleOption types.bool true "Enable the assignement of vhosts via the HostServ service.";
+          max-length = mkSimpleOption types.int 64 "Maximum length of a vhost";
+          valid-regexp = mkSimpleOption types.str "^[0-9A-Za-z.\\-_/]+$" "Regexp for testing validity of a vhost";
+        };
+
+        default-user-modes = mkSimpleOption types.str "+i" "Modes that are set by default when a user connections.";
+
+        auth-script = mkSubmoduleOption {
+          enabled = mkSimpleOption types.bool false "Enable a pluggable authentication mechanism via subprocess invocation";
+          command = mkSimpleOption types.str "" "Path to script to run for authentication verification.";
+          args = mkSimpleOption (types.listOf types.str) [] "constant list of args to pass to the command";
+          autocreate = mkSimpleOption types.bool true "Should we automatically create users if the plugin returns success?";
+          timeout = mkSimpleOption types.str "9s" "timeout for process execution, after which we send a SIGTERM";
+          kill-timeout = mkSimpleOption types.str "1s" "how long after the SIGTERM before we follow up with a SIGKILL";
+          max-concurrency = mkSimpleOption types.int 64 "how many scripts are allowed to run at once? 0 for no limit";
         };
       };
 
-      limits = mkSubmoduleOption {
-        nicklen               = mkSimpleOption types.int 32   "The max nick length allowed";
-        identlen              = mkSimpleOption types.int 20   "The max ident length allowed";
-        channellen            = mkSimpleOption types.int 64   "The max channel name length allowed";
-        awaylen               = mkSimpleOption types.int 390  "The maximum length of an away message";
-        kicklen               = mkSimpleOption types.int 390  "The maximum length of a kick message";
-        topiclen              = mkSimpleOption types.int 390  "The maximum length of a channel topic";
-        monitor-entries       = mkSimpleOption types.int 100  "The maximum number of monitor entries a client can have";
-        whowas-entries        = mkSimpleOption types.int 100  "Whowas entries to store";
-        chan-list-modes       = mkSimpleOption types.int 60   "Maximum length of channel lists";
-        registration-messages = mkSimpleOption types.int 1024 "Maximum number of messages t o accept during registration";
-        multiline = mkSubmoduleOption {
-          max-bytes = mkSimpleOption types.int 4096 "Message length limit in bytes for multiline capabilities. Zero means disabled.";
-          max-lines = mkSimpleOption types.int 100  "Line limit for limit for multiline capabilities. Zero means no limit.";
+      channel = mkSubmoduleOption {
+        default-modes = mkSimpleOption types.str "+ntC" "modes that are set when new channels are created";
+        max-channels-per-client = mkSimpleOption types.int 100 "if this is true, new channels can only be created by operators with the `chanreg` operator capability";
+        registration = mkSubmoduleOption = {
+          enabled = mkSimpleOption types.bool true "Can users register new channels?";
+          operator-only = mkSimpleOption types.bool false "restrict new channel registrations to operators only";
+          max-channels-per-accoun = mkSimpleOption types.int 15 "how many channels can each account register";
         };
+        list-delay = mkSimpleOption types.str "0s" "as a crude countermeasure against spambots, anonymous connections younger than this value will get an empty response to /LIST (a time period of 0 disables)";
+        invite-expiration = mkSimpleOption types.str "24h" "INVITE to an invite-only channel expires after this amount of time (0 or omit for no expiration)";
+      };
+
+      oper-classes = mkOption {
+        type = types.attrsOf (mkSubmoduleOption {
+          title = mkOption {
+            type = types.str;
+            description = "title shown in WHOIS";
+          };
+          extends = mkOption {
+            type = types.nullOr types.str;
+            description = "oper class this extends from";
+            default = null;
+          };
+          capabilities = mkOption {
+            type = types.listOf operCapabilitiesEnum;
+            description = "Capabilities this class has";
+          };
+        });
+        default = {
+          chat-moderator = {
+            title = "Chat Moderator";
+            capabilities = ["kill" "ban" "nofakelag" "relaymsg" "vhosts" "sajoin" "samode" "snomasks" "roleplay"];
+          };
+          server-admin = {
+            title = "Server Admin";
+            extends = "chat-moderator";
+            capabilities = ["rehash" "accreg" "chanreg" "history" "defcon" "massmessage"];
+          };
+        };
+        description = "an operator has a single \"class\" (defining a privilege level), which can include multiple \"capabilities\" (defining privileged actions they can take).";
+      };
+
+      opers = mkOption {
+        type = types.attrsOf (mkSubmoduleOption {
+          class = mkOption { 
+            type = types.str;
+            description = "Which capabilities this oper has access to";
+          };
+          hidden = mkOption {
+            type = types.bool;
+            default = true;
+            description = "Whether to show to the operator status to unprivileged users in WHO and WHOIS responses";
+          };
+          whois-line = mkOption {
+            type = types.nullOr types.str;
+            description = "custom whois line (if `hidden` is enabled, visible only to other operators)";
+            exmaple = "staff";
+            default = null;
+          };
+          modes = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "modes to auto-set upon opering-up";
+            example = "+is acdjknoqtuxv";
+          };
+          passwordHash = mkSimpleOption (types.nullOr types.str) null "Ergo password hash generated by ergo genpasswd.";
+          # TODO: Add more options for passwords
+          certfp = mkOption (types.nullOr types.str) null "if a SHA-256 certificate fingerprint is configured here, then it will be required to /OPER ";
+          auto = mkOption types.bool false "if 'auto' is set (and no password hash is set), operator permissions will be granted automatically as soon as you connect with the right fingerprint";
+        });
+        default = {};
       };
 
       logging = mkOption {
@@ -225,6 +393,136 @@ in
           }
         ];
       };
+
+      debug = mkSubmoduleOption {
+        recover-from-errors = mkSimpleOption types.bool true "when enabled, Ergo will attempt to recover from certain kinds of client-triggered runtime errors that would normally crash the server. this makes the server more resilient to DoS, but could result in incorrect behavior."
+
+        pprof-listener: mkOption {
+          type = types.str;
+          default = "";
+          example = "localhost:6060";
+          description = "optionally expose a pprof http endpoint: https://golang.org/pkg/net/http/pprof/ it is strongly recommended that you don't expose this on a public interface if you need to access it remotely, you can use an SSH tunnel. Leave blank to disable.";
+        };
+      };
+
+      datastore = mkSubmoduleOption {
+        path = mkSimpleOption types.str "ircd.db" "path to the datastore";
+        autoupgrade = mkSimpleOption types.bool true "if the database schema requires an upgrade, `autoupgrade` will attempt to perform it automatically on startup.";
+        mysql = mkSubmoduleOption {
+          enabled = mkSimpleOption types.bool false "Whether to enable mysql for persistent history.";
+          ensureDB = mkSimpleOption types.bool false "Whether to have nix manage the database. This invalidates `host`, `port`, and `socket-path`.";
+          host = mkSimpleOption types.str "localhost" "";
+          port = mkSimpleOption types.port 3306 "";
+          socket-path = mkSimpleOption (types.nullOr types.path) null "";
+          user = mkSimpleOption types.str "ergo" "Database user";
+          password = mkSimpleOption types.str "hunter2" "Database password";
+          history-database = mkSimpleOption types.str "ergo_history" "Database name";
+          timeout = mkSimpleOption types.str "3s" "";
+          max-conns = mkSimpleOption types.int 4 "";
+          conn-max-lifetime = mkOption {
+            type = types.nullOr types.str;
+            default = null; 
+            example = "180s";
+          };
+        };
+      };
+
+      languages = mkSubmoduleOption {
+        enabled = mkSimpleOption types.bool true "Whether to load languages";
+        default = mkSimpleOption types.str "en" "Default language for new clients";
+        path = mkSimpleOption types.str "languages" "Which directory contains language files";
+      };
+
+      limits = mkSubmoduleOption {
+        nicklen               = mkSimpleOption types.int 32   "The max nick length allowed";
+        identlen              = mkSimpleOption types.int 20   "The max ident length allowed";
+        channellen            = mkSimpleOption types.int 64   "The max channel name length allowed";
+        awaylen               = mkSimpleOption types.int 390  "The maximum length of an away message";
+        kicklen               = mkSimpleOption types.int 390  "The maximum length of a kick message";
+        topiclen              = mkSimpleOption types.int 390  "The maximum length of a channel topic";
+        monitor-entries       = mkSimpleOption types.int 100  "The maximum number of monitor entries a client can have";
+        whowas-entries        = mkSimpleOption types.int 100  "Whowas entries to store";
+        chan-list-modes       = mkSimpleOption types.int 60   "Maximum length of channel lists";
+        registration-messages = mkSimpleOption types.int 1024 "Maximum number of messages t o accept during registration";
+        multiline = mkSubmoduleOption {
+          max-bytes = mkSimpleOption types.int 4096 "Message length limit in bytes for multiline capabilities. Zero means disabled.";
+          max-lines = mkSimpleOption types.int 100  "Line limit for limit for multiline capabilities. Zero means no limit.";
+        };
+      };
+
+      fakelag = mkSubmoduleOption {
+        enabled = mkSimpleOption types.bool true "Whether to enforce fakelag";
+        window = mkSimpleOption types.str "1s" "Time unit for counting command rates";
+        burst-limit = mkSimpleOption types.int 5 "Clients can send  this many commands without fakelag being imposed";
+        messages-per-window = mkSimpleOption types.int 2 "once clients have exceeded their burst allowance, they can send only this many commands per `window`";
+        cooldown = mkSimpleOption types.str "2s" "client status resets to the default state if they go this long without sending any commands";
+        command-budgets = mkOption {
+          type = types.attrsOf types.int;
+          default = {
+            CHATHISTORY = 16;
+            MARKREAD = 16;
+            MONITOR = 1;
+            WHO = 1;
+          };
+          description = "exempt a certain number of command invocations per session from fakelag. this is to speed up \"resynchronization\" of client state during reattach";
+        };
+      };
+
+      roleplay = mkSubmoduleOption {
+        enabled = mkSimpleOption types.bool false "Whether to enable roleplay commands";
+        require-oper = mkSimpleOption types.bool false "Whether to require the roleplay oper capability to send roleplay messages";
+        require-chanops = mkSimpleOption types.bool false "Whether to require channel operator permissions to send roleplay messages";
+        add-suffix = mkSimpleOption types.bool true "Whether to add the real nickname in parentheses to the end of every roleplay message";
+      };
+
+      extjwt = mkOption {
+        type = types.nullOr (mkSubmoduleOption {
+          expiration = mkSimpleOption types.str "45s" "Expiration time for the token";
+          secret = mkSimpleOption (types.nullOr types.str) null "Configure token to be signed with an HMAC and a symmetric secret";
+          rsa-private-key-file = mkSimpleOption (types.nullOr types.str) null "Configure token to be signed with RSA private key";
+          services = mkOption {
+            type = types.attrsOf (mkSubmoduleOption {
+              expiration = mkOption { type = type.str; };
+              secret = mkSimpleOption { type = types.nullOr types.str; };
+              rsa-private-key-file = mkSimpleOption { type = types.nullOr types.str; };
+            });
+            default = {};
+          };
+        });
+        default = null;
+      };
+
+      history = mkSubmoduleOption {
+        enabled = mkSimpleOption types.bool true "Whether to enable chat history?";
+        channel-length = mkSimpleOption types.int 2048 "The number of channel-specific events (messages, joins, parts) should be tracked per channel";
+        client-length = mkSimpleOption types.int 256 "The number of direct messages and notices to be tracked per user";
+        autoresize-window = mkSimpleOption types.str "3d" "The amount of time messages should be preserved.";
+        autoreplay-on-join = mkSimpleOption types.int 0 "The number of messages to automatically play back on channel join (0 to disable)";
+        chathistory-maxmessages = mkSimpleOption types.int 1000 "The maximum number of CHATHISTORY messages that can be requested at once. (0 disables support for CHATHISTORY)";
+        znc-maxmessages = mkSimpleOption types.int 2048 "Maximum number of messages that can be replayed at once during znc emulation";
+        restrictions = mkSubmoduleOption {
+          expire-time = types.str "1w" "if this is set, messages older than this cannot be retrieved by anyone (and will eventually be deleted from persistent storage, if that's enabled)";
+          query-cutoff = (types.enum ["none" "registration-time" "join-time"]) "none" "this restricts access to channel history (it can be overridden by channel owners)";
+          grace-period = types.str "1h" "if query-cutoff is set to 'registration-time', this allows retrieval of messages that are up to 'grace-period' older than the above cutoff. if you use 'registration-time', this is recommended to allow logged-out users to query history after disconnections.";
+        };
+        persistent = mkSubmoduleOption let
+          optEnum = types.enum ["disabled" "opt-in" "opt-out" "mandatory"];
+        in {
+          enabled = mkSimpleOption types.bool false "Whether to enable the storage of history messages in a persistend database";
+          unregistered-channels = mkSimpleOption types.bool false "Whether to store unregistered channel messages in the persistent database";
+          registered-channels = mkSimpleOption optEnum "opt-out" "Default history storage setting for registered channels";
+          direct-messages = mkSimpleOption optEnum "opt-out" "Default history storage setting for direct messages";
+        };
+        retention = mkSubmoduleOption {
+          allow-individual-delete = mkSimpleOption types.bool false "Whether to allow users to delete their own messages from history";
+          enabled-account-indexing = mkSimpleOption types.bool false "if persistent history is enabled, create additional index tables, allowing deletion of JSON export of an account's messages. this may be needed for compliance with data privacy regulations.";
+        };
+        tagmsg-storage = mkSubmoduleOption {
+          default = mkSimpleOption types.bool false "Whether TAGMSG should be stored by default";
+          whitelist = mkSimpleOption (types.listOf types.str) ["+draft/react" "+react"] "If default is false, store TAGMSG containing any of these tags";
+          blacklist = mkSimpleOption (types.listOf types.str) [] "If default is true, don't store TAGMSG containing any of these tags";
+        };
+      };
     };
   };
 
@@ -235,9 +533,20 @@ in
       text = builtins.toJSON {
         network.name = cfg.networkName;
         server = cfg.server;
-        datastore = cfg.datastore;
-        limits = cfg.limits;
+        accounts = cfg.accounts;
+        channels = cfg.channels;
+        oper-classes = cfg.oper-classes;
+        opers = cfg.opers;
         logging = cfg.logging;
+        debug = cfg.debug;
+        lock-file = "ircd.lock";
+        datastore = cfg.datastore;
+        languages = cfg.languages;
+        limits = cfg.limits;
+        fakelag = cfg.fakelag;
+        roleplay = cfg.roleplay;
+        extjwt = cfg.extjwt;
+        history = cfg.history;
       };
     };
   };
