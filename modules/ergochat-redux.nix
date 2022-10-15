@@ -184,7 +184,7 @@ in
 
         registration = mkSubmoduleOption {
           enabled = mkSimpleOption types.bool true "can users register new accounts for themselves? if this is false, operators with the `accreg` capability can still create accounts with `/NICKSERV SAREGISTER`";
-          allow-before-connection = mkSimpleOption types.bool true "can users use the REGISTER command to register before fully connecting?";
+          allow-before-connect = mkSimpleOption types.bool true "can users use the REGISTER command to register before fully connecting?";
 
           throttling = mkSubmoduleOption {
             enabled = mkSimpleOption types.bool true "Enable global throttle on new account creation.";
@@ -298,10 +298,11 @@ in
       channels = mkSubmoduleOption {
         default-modes = mkSimpleOption types.str "+ntC" "modes that are set when new channels are created";
         max-channels-per-client = mkSimpleOption types.int 100 "if this is true, new channels can only be created by operators with the `chanreg` operator capability";
+        operator-only-creation = mkSimpleOption types.bool false "if this is true, new channels can only be created by operators with the `chanreg` operator capability";
         registration = mkSubmoduleOption {
           enabled = mkSimpleOption types.bool true "Can users register new channels?";
           operator-only = mkSimpleOption types.bool false "restrict new channel registrations to operators only";
-          max-channels-per-accoun = mkSimpleOption types.int 15 "how many channels can each account register";
+          max-channels-per-account = mkSimpleOption types.int 15 "how many channels can each account register";
         };
         list-delay = mkSimpleOption types.str "0s" "as a crude countermeasure against spambots, anonymous connections younger than this value will get an empty response to /LIST (a time period of 0 disables)";
         invite-expiration = mkSimpleOption types.str "24h" "INVITE to an invite-only channel expires after this amount of time (0 or omit for no expiration)";
@@ -515,7 +516,7 @@ in
         };
         retention = mkSubmoduleOption {
           allow-individual-delete = mkSimpleOption types.bool false "Whether to allow users to delete their own messages from history";
-          enabled-account-indexing = mkSimpleOption types.bool false "if persistent history is enabled, create additional index tables, allowing deletion of JSON export of an account's messages. this may be needed for compliance with data privacy regulations.";
+          enable-account-indexing = mkSimpleOption types.bool false "if persistent history is enabled, create additional index tables, allowing deletion of JSON export of an account's messages. this may be needed for compliance with data privacy regulations.";
         };
         tagmsg-storage = mkSubmoduleOption {
           default = mkSimpleOption types.bool false "Whether TAGMSG should be stored by default";
