@@ -527,13 +527,17 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable
-  {
+  config = let
+    fixServerCfg = serverCfg: (builtins.removeAttrs serverCfg ["websocketsAllowedOrigins"]) // {
+      websockets = { allowed-origins = serverCfg.websocketsAllowedOrigins; };
+    };
+  in
+  lib.mkIf cfg.enable {
     environment.etc."ergo.yaml".source = pkgs.writeTextFile {
       name = "ergo.yaml";
       text = builtins.toJSON {
         network.name = cfg.networkName;
-        server = cfg.server;
+        server = fixServerCfg cfg.server;
         accounts = cfg.accounts;
         channels = cfg.channels;
         oper-classes = cfg.oper-classes;
