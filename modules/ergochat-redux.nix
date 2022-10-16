@@ -524,12 +524,12 @@ in
           blacklist = mkSimpleOption (types.listOf types.str) [] "If default is true, don't store TAGMSG containing any of these tags";
         };
       };
-    };
 
-    openFilesLimit = mkOption {
-      type = types.int;
-      default = 1024;
-      description = "Maximum number of open files. Limits the clients and server connections.";
+      openFilesLimit = mkOption {
+        type = types.int:L;
+        default = 1024;
+        description = "Maximum number of open files. Limits the clients and server connections.";
+      };
     };
   };
 
