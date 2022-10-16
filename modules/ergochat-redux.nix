@@ -615,6 +615,7 @@ in
       serviceConfig = {
         ExecReload = "${pkgs.util-linux}/bin/kill -HUP $MAINPID";
         DynamicUser = true;
+        WorkingDirectory = "/var/lib/ergo";
         StateDirectory = "ergo";
         LimitNOFILE = toString cfg.openFilesLimit;
         SupplementaryGroups = map (ACMEHost: config.security.acme.certs.${ACMEHost}.group) acmeHosts;
