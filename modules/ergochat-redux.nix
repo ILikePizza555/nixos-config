@@ -561,7 +561,7 @@ in
 
     fixDatastoreCfg = datastoreCfg: datastoreCfg // {
       mysql = let
-        removeNames = ["ensureDB"] ++ (if enableMysql then ["password"] else []);
+        removeNames = ["ensureDB"] ++ (if enableMysql then ["password port host"] else []);
         updates = if enableMysql then {
           socket-path = "/run/mysqld/mysqld.sock";
         } else {};
