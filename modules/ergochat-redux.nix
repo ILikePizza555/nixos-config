@@ -542,14 +542,14 @@ in
 
     applyACMEToListener = listenerName: listenerCfg:
       builtins.removeAttrs listenerCfg ["useACMEHost"] //
-      (if listenerCfg.useACMEHost != null && builtins.stringLength listenerCfg.useACMEHost != 0 then
+      (lib.optionalAttrs listenerCfg.useACMEHost != null && builtins.stringLength listenerCfg.useACMEHost != 0
         {
           tls = {
             cert = config.security.acme.certs.${listenerCfg.useACMEHost}.directory + "/cert.pem";
             key = config.security.acme.certs.${listenerCfg.useACMEHost}.directory + "/key.pem";
           };
         }
-      else {});
+      );
 
 
     fixServerCfg = serverCfg: (builtins.removeAttrs serverCfg ["websocketsAllowedOrigins"]) // {
@@ -562,7 +562,7 @@ in
     fixDatastoreCfg = datastoreCfg:
       let 
         removeNames = ["ensureDB"] ++ (if enableMysql then ["password" "port" "host"] else []);
-        updates = if enableMysql then { socket-path = "/run/mysqld/mysqld.sock"; } else {};
+        updates = lib.optionalAttrs enableMysql { socket-path = "/run/mysqld/mysqld.sock"; };
       in 
       datastoreCfg // { mysql = (builtins.removeAttrs datastoreCfg.mysql removeNames) // updates; }; 
   in
@@ -589,7 +589,7 @@ in
       };
     };
 
-    services.mysql = if enableMysql then {
+    services.mysql = lib.optionalAttrs enableMysql {
       enable = true;
       ensureDatabases = [ cfg.datastore.mysql.history-database ];
       ensureUsers = [
@@ -600,7 +600,7 @@ in
           };
         }
       ];
-    } else {};
+    };
 
     systemd.services.ergochat-redux = {
       description = "Ergo IRC daemon";
