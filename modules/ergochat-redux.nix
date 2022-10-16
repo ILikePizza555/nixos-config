@@ -609,7 +609,14 @@ in
       description = "Ergo IRC daemon";
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        ExecStart = "${pkgs.coreutils}/bin/mkdir -p languages && ${pkgs.ergochat}/bin/ergo run --conf /etc/ergo.yaml";
+        ExecStart = pkgs.writeTextFile {
+          name = "ergo.sh";
+          executable = true;
+          text = ''
+          #!/bin/sh
+          mkdir -p languages
+          ${pkgs.ergochat}/bin/ergo run --conf /etc/ergo.yaml'';
+        };
         ExecReload = "${pkgs.util-linux}/bin/kill -HUP $MAINPID";
         DynamicUser = true;
         StateDirectory = "ergo";
