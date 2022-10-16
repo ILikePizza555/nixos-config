@@ -1,25 +1,20 @@
 {config, ...}:
 
-# TODO: Make this into a module, it's complicated enough that it should be one
-
 let
   host = "irc.nev.systems";
-  acmeHost = "nev.systems";
-  certCfg = config.security.acme.certs.${acmeHost};
-  tls = {
-    cert = certCfg.directory + "/cert.pem";
-    key = certCfg.directory + "/key.pem";
-  };
-  dbUsername = "ergo";
-  dbName = "ergo_history";
+  useACMEHost = "nev.systems";
 in
 {
+  imports = [
+    ../modules/ergochat-redux.nix
+  ];
+
   networking = {
     firewall.allowedTCPPorts = [6697 8087];
   };
 
   services = {
-    ergochat = {
+    ergochat-redux = {
       enable = true;
       settings = {
         accounts = {
@@ -29,10 +24,7 @@ in
         };
         datastore.mysql = {
           enabled = true;
-          # Hardcoded path in the mysql nix module. Not expecting this to change
-          socket-path = "/run/mysqld/mysqld.sock";
-          user = dbUsername;
-          history-database = dbName;
+          ensureDB = true;
         };
         history = {
           enabled = true;
@@ -53,15 +45,13 @@ in
             "[::1]:6667" = {};
 
             ":6697" = {
-              inherit tls;
-              proxy = false;
-              min-tls-version = 1.2;
+              inherit useACMEHost;
             };
 
             # Websocket listner
             ":8097" = {
               websocket = true;
-              inherit tls;
+              inherit useACMEHost;
             };
           };
           sts.enabled = true;
@@ -72,31 +62,10 @@ in
       };
     };
 
-    mysql = {
-      ensureDatabases = [ dbName ];
-      ensureUsers = [
-        {
-          name = dbUsername;
-          ensurePermissions = {
-            "${dbName}.*" = "ALL PRIVILEGES";
-          };
-        }
-      ];
-    };
-
     nginx.virtualHosts.${host} = {
       useACMEHost = acmeHost;
       locations."/" = {
         return = "204";
-      };
-    };
-  };
-
-  # Add the acme group to the service so that we can read the certificates
-  systemd = {
-    services.ergochat = {
-      serviceConfig = {
-        Group = "acme";
       };
     };
   };
