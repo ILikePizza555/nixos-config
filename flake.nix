@@ -40,10 +40,6 @@
         modules = [
           ./hosts/goth-pinkie-pie
           ./profiles/neovim.nix
-          ./modules/ergochat-redux.nix
-          {
-            services.ergochat-redux.enable = true;
-          }
           home-manager.nixosModules.home-manager
           {
             home-manager = {
