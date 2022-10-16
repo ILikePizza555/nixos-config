@@ -36,6 +36,14 @@ in
           enable-account-indexing = true;
         };
       };
+      opers = {
+        admin = {
+          class = "server-admin";
+          whois-line = "Is the server administrator";
+          hidden = true;
+          passwordHash = "$2a$04$3opB87SWx7rgwSt8Y0/RE.zZtoDSij93qaIDTkqxg8edExECCMDWK";
+        };
+      };
       server = {
         name = "irc.nev.systems";
         listeners = {
