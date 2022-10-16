@@ -63,7 +63,7 @@ in
     };
 
     nginx.virtualHosts.${host} = {
-      useACMEHost = acmeHost;
+      inherit useACMEHost;
       locations."/" = {
         return = "204";
       };
