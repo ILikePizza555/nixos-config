@@ -559,15 +559,12 @@ in
 
     enableMysql = cfg.datastore.mysql.enabled && cfg.datastore.mysql.ensureDB;
 
-    fixDatastoreCfg = datastoreCfg: datastoreCfg // {
-      mysql = let
-        removeNames = ["ensureDB"] ++ (if enableMysql then ["password port host"] else []);
-        updates = if enableMysql then {
-          socket-path = "/run/mysqld/mysqld.sock";
-        } else {};
-      in
-      (builtins.removeAttrs datastoreCfg.mysql removeNames) // updates; 
-    };
+    fixDatastoreCfg = datastoreCfg:
+      let 
+        removeNames = ["ensureDB"] ++ (if enableMysql then ["password" "port" "host"] else []);
+        updates = if enableMysql then { socket-path = "/run/mysqld/mysqld.sock"; } else {};
+      in 
+      datastoreCfg // { mysql = (builtins.removeAttrs datastoreCfg.mysql removeNames) // updates; }; 
   in
   lib.mkIf cfg.enable {
     environment.etc."ergo.yaml".source = pkgs.writeTextFile {
