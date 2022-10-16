@@ -525,6 +525,12 @@ in
         };
       };
     };
+
+    openFilesLimit = mkOption {
+      type = types.int;
+      default = 1024;
+      description = "Maximum number of open files. Limits the clients and server connections.";
+    };
   };
 
   config = let
