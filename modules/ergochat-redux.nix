@@ -568,6 +568,8 @@ in
         updates = lib.optionalAttrs enableMysql { socket-path = "/run/mysqld/mysqld.sock"; };
       in 
       datastoreCfg // { mysql = (builtins.removeAttrs datastoreCfg.mysql removeNames) // updates; }; 
+
+    fixOper = operName: operCfg: (builtins.removeAttrs operCfg ["passwordHash"]) // { password = operCfg.passwordHash; }; 
   in
   lib.mkIf cfg.enable {
     assertions = [
@@ -588,7 +590,7 @@ in
         accounts = cfg.accounts;
         channels = cfg.channels;
         oper-classes = cfg.oper-classes;
-        opers = cfg.opers;
+        opers = builtins.mapAttrs fixOper cfg.opers;
         logging = cfg.logging;
         debug = cfg.debug;
         lock-file = "ircd.lock";
