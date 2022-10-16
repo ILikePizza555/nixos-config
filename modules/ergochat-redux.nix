@@ -583,7 +583,7 @@ in
     };
 
     services.mysql = if enableMysql then {
-      enabled = true;
+      enable = true;
       ensureDatabases = [ cfg.datastore.mysql.history-database ];
       ensureUsers = [
         {
