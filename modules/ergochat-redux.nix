@@ -528,6 +528,8 @@ in
   };
 
   config = let
+    acmeHosts = lib.mapAttrsToList (listenerName: listenerCfg: listenerCfg.useACMEHost) cfg.server.listeners;
+
     applyACMEToListener = listenerName: listenerCfg:
       builtins.removeAttrs listenerCfg ["useACMEHost"] //
       (if listenerCfg.useACMEHost != null && builtins.stringLength listenerCfg.useACMEHost != 0 then
@@ -590,5 +592,18 @@ in
         }
       ];
     } else {};
+
+    systemd.services.ergochat-redux = {
+      description = "Ergo IRC daemon";
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        ExecStart = "${pkgs.ergochat}/bin/ergo run --conf /etc/ergo.yaml";
+        ExecReload = "${pkgs.util-linux}/bin/kill -HUP $MAINPID";
+        DynamicUser = true;
+        StateDirectory = "ergo";
+        LimitNOFILE = toString cfg.openFilesLimit;
+        SupplementaryGroups = map (ACMEHost: config.security.acme.certs.${ACMEHost}.group) acmeHosts;
+      };
+    };
   };
 }
