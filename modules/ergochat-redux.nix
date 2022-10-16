@@ -594,7 +594,9 @@ in
       ensureUsers = [
         {
           name = cfg.datastore.mysql.user;
-          "${cfg.datastore.mysql.history-database}.*" = "ALL PRIVILEGES"; 
+          ensurePermissions = {
+            "${cfg.datastore.mysql.history-database}.*" = "ALL PRIVILEGES"; 
+          };
         }
       ];
     } else {};
