@@ -530,6 +530,9 @@ in
         default = 1024;
         description = "Maximum number of open files. Limits the clients and server connections.";
       };
+
+      user = mkSimpleOption types.str "ergo" "The user to run the ergo service as. If set to `ergo` this user is automatically created.";
+      group = mkSimpleOption types.str "ergo" "The group to run the ergo service under. If set to `ergo` this group is automatically created.";
     };
   };
 
@@ -611,12 +614,24 @@ in
       '';
       serviceConfig = {
         ExecReload = "${pkgs.util-linux}/bin/kill -HUP $MAINPID";
-        DynamicUser = true;
+        User = cfg.user;
+        Group = cfg.group;
         WorkingDirectory = "/var/lib/ergo";
         StateDirectory = "ergo";
         LimitNOFILE = toString cfg.openFilesLimit;
-        SupplementaryGroups = map (ACMEHost: config.security.acme.certs.${ACMEHost}.group) acmeHosts;
       };
+    };
+
+    users = {
+      users = lib.optionalAttrs (cfg.user == "ergo") {
+        ergo = {
+          group = cfg.group;
+          isSystemUser = true;
+          extraGroups = map (ACMEHost: config.security.acme.certs.${ACMEHost}.group) acmeHosts;
+        };
+      };
+
+      groups = lib.optionalAttrs (cfg.group == "ergo") { ergo = {}; };
     };
   };
 }
