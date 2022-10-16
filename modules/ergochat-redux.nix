@@ -536,7 +536,7 @@ in
   config = let
     acmeHosts = let
       hostList = lib.mapAttrsToList (listenerName: listenerCfg: listenerCfg.useACMEHost) cfg.server.listeners;
-      filteredHostList = builtins.filter isNull hostList;
+      filteredHostList = builtins.filter (x: x != null) hostList;
       in
       lib.unique filteredHostList;
 
