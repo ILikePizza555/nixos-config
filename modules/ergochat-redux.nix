@@ -608,15 +608,11 @@ in
     systemd.services.ergochat-redux = {
       description = "Ergo IRC daemon";
       wantedBy = [ "multi-user.target" ];
+      script = ''
+        mkdir -p languages
+        ${pkgs.ergochat}/bin/ergo run --conf /etc/ergo.yaml
+      '';
       serviceConfig = {
-        ExecStart = pkgs.writeTextFile {
-          name = "ergo.sh";
-          executable = true;
-          text = ''
-          #!/bin/sh
-          mkdir -p languages
-          ${pkgs.ergochat}/bin/ergo run --conf /etc/ergo.yaml'';
-        };
         ExecReload = "${pkgs.util-linux}/bin/kill -HUP $MAINPID";
         DynamicUser = true;
         StateDirectory = "ergo";
