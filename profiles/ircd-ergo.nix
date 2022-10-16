@@ -59,12 +59,12 @@ in
       };
       roleplay.enabled = true;
     };
-  };
 
-  nginx.virtualHosts.${host} = {
-    inherit useACMEHost;
-    locations."/" = {
-      return = "204";
+    nginx.virtualHosts.${host} = {
+      inherit useACMEHost;
+      locations."/" = {
+        return = "204";
+      };
     };
   };
 }
