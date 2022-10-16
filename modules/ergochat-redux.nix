@@ -534,7 +534,11 @@ in
   };
 
   config = let
-    acmeHosts = lib.mapAttrsToList (listenerName: listenerCfg: listenerCfg.useACMEHost) cfg.server.listeners;
+    acmeHosts = let
+      hostList = lib.mapAttrsToList (listenerName: listenerCfg: listenerCfg.useACMEHost) cfg.server.listeners;
+      filteredHostList = builtins.filter isNull hostList;
+      in
+      lib.unique filteredHostList;
 
     applyACMEToListener = listenerName: listenerCfg:
       builtins.removeAttrs listenerCfg ["useACMEHost"] //
