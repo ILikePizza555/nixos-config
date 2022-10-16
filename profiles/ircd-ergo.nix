@@ -16,6 +16,7 @@ in
   services = {
     ergochat-redux = {
       enable = true;
+      networkName = "NevSystems";
       accounts = {
         authentication-enabled = true;
         registration.enabled = false;
