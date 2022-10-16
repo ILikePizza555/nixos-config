@@ -544,6 +544,18 @@ in
       websockets = { allowed-origins = serverCfg.websocketsAllowedOrigins; };
       listeners = builtins.mapAttrs applyACMEToListener serverCfg.listeners;
     };
+
+    enableMysql = cfg.datastore.mysql.enabled && cfg.datastore.mysql.ensureDB;
+
+    fixDatastoreCfg = datastoreCfg: datastoreCfg // {
+      mysql = let
+        removeNames = ["ensureDB"] ++ (if enableMysql then ["password"] else []);
+        updates = if enableMysql then {
+          socket-path = "/run/mysqld/mysqld.sock";
+        } else {};
+      in
+      (builtins.removeAttrs datastoreCfg.mysql removeNames) // updates; 
+    };
   in
   lib.mkIf cfg.enable {
     environment.etc."ergo.yaml".source = pkgs.writeTextFile {
@@ -558,7 +570,7 @@ in
         logging = cfg.logging;
         debug = cfg.debug;
         lock-file = "ircd.lock";
-        datastore = cfg.datastore;
+        datastore = fixDatastoreCfg cfg.datastore;
         languages = cfg.languages;
         limits = cfg.limits;
         fakelag = cfg.fakelag;
@@ -567,5 +579,16 @@ in
         history = cfg.history;
       };
     };
+
+    services.mysql = if enableMysql then {
+      enabled = true;
+      ensureDatabases = [ cfg.datastore.mysql.history-database ];
+      ensureUsers = [
+        {
+          name = cfg.datastore.mysql.user;
+          "${cfg.datastore.mysql.history-database}.*" = "ALL PRIVILEGES"; 
+        }
+      ];
+    } else {};
   };
 }
