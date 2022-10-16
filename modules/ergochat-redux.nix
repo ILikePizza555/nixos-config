@@ -528,8 +528,21 @@ in
   };
 
   config = let
+    applyACMEToListener = listenerName: listenerCfg:
+      builtins.removeAttrs listenerCfg ["useACMEHost"] //
+      (if listenerCfg.useACMEHost != null && builtins.stringLength listenerCfg.useACMEHost != 0 then
+        {
+          tls = {
+            cert = config.security.acme.certs.${listenerCfg.useACMEHost}.directory + "/cert.pem";
+            key = config.security.acme.certs.${listenerCfg.useACMEHost}.directory + "/key.pem";
+          };
+        }
+      else {});
+
+
     fixServerCfg = serverCfg: (builtins.removeAttrs serverCfg ["websocketsAllowedOrigins"]) // {
       websockets = { allowed-origins = serverCfg.websocketsAllowedOrigins; };
+      listeners = builtins.mapAttrs applyACMEToListener serverCfg.listeners;
     };
   in
   lib.mkIf cfg.enable {
