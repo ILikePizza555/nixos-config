@@ -609,8 +609,9 @@ in
       description = "Ergo IRC daemon";
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        ExecStartPre = "/bin/mkdir -p languages";
-        ExecStart = "${pkgs.ergochat}/bin/ergo run --conf /etc/ergo.yaml";
+        ExecStart = "
+          ${pkgs.coreutils}/bin/mkdir -p languages &&
+          ${pkgs.ergochat}/bin/ergo run --conf /etc/ergo.yaml";
         ExecReload = "${pkgs.util-linux}/bin/kill -HUP $MAINPID";
         DynamicUser = true;
         StateDirectory = "ergo";
