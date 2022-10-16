@@ -415,7 +415,7 @@ in
           host = mkSimpleOption types.str "localhost" "";
           port = mkSimpleOption types.port 3306 "";
           socket-path = mkSimpleOption (types.nullOr types.path) null "";
-          user = mkSimpleOption types.str "ergo" "Database user";
+          user = mkSimpleOption types.str cfg.user "Database user. If nix is managing mysql, then this must be the same as `config.services.ergochat-redux.user`";
           password = mkSimpleOption types.str "hunter2" "Database password";
           history-database = mkSimpleOption types.str "ergo_history" "Database name";
           timeout = mkSimpleOption types.str "3s" "";
@@ -570,6 +570,16 @@ in
       datastoreCfg // { mysql = (builtins.removeAttrs datastoreCfg.mysql removeNames) // updates; }; 
   in
   lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = enableMysql && (cfg.datastore.mysql.user != cfg.user);
+        message = ''
+          Nix management of mysql for ergochat enabled, but `cfg.datastore.mysql.user` does not match `cfg.user`. 
+          This will make the service unable to start.
+        '';
+      }
+    ];
+
     environment.etc."ergo.yaml".source = pkgs.writeTextFile {
       name = "ergo.yaml";
       text = builtins.toJSON {
