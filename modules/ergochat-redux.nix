@@ -545,7 +545,7 @@ in
 
     applyACMEToListener = listenerName: listenerCfg:
       builtins.removeAttrs listenerCfg ["useACMEHost"] //
-      (lib.optionalAttrs listenerCfg.useACMEHost != null && builtins.stringLength listenerCfg.useACMEHost != 0
+      (lib.optionalAttrs (listenerCfg.useACMEHost != null && builtins.stringLength listenerCfg.useACMEHost != 0)
         {
           tls = {
             cert = config.security.acme.certs.${listenerCfg.useACMEHost}.directory + "/cert.pem";
@@ -571,13 +571,13 @@ in
   in
   lib.mkIf cfg.enable {
     assertions = [
-      {
+      /*{
         assertion = enableMysql && (cfg.datastore.mysql.user != cfg.user);
         message = ''
-          Nix management of mysql for ergochat enabled, but `cfg.datastore.mysql.user` does not match `cfg.user`. 
+          Nix management of mysql for ergochat enabled, but `datastore.mysql.user` does not match `user`. 
           This will make the service unable to start.
         '';
-      }
+      }*/
     ];
 
     environment.etc."ergo.yaml".source = pkgs.writeTextFile {
