@@ -617,7 +617,11 @@ in
 
     systemd.services.ergochat-redux = {
       description = "Ergo IRC daemon";
-      wantedBy = [ "multi-user.target" ];
+      wantedBy = ["multi-user.target"];
+      after = builtins.concatLists [
+        [ "network.target" ]
+        if enableMysql then [ "mysql.service" ] else []
+      ];
       script = ''
         mkdir -p languages
         ${pkgs.ergochat}/bin/ergo run --conf /etc/ergo.yaml
