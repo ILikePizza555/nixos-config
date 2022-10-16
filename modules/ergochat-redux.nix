@@ -620,7 +620,7 @@ in
       wantedBy = ["multi-user.target"];
       after = builtins.concatLists [
         [ "network.target" ]
-        if enableMysql then [ "mysql.service" ] else []
+        (if enableMysql then [ "mysql.service" ] else [])
       ];
       script = ''
         mkdir -p languages
