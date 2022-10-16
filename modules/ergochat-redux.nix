@@ -352,7 +352,7 @@ in
           whois-line = mkOption {
             type = types.nullOr types.str;
             description = "custom whois line (if `hidden` is enabled, visible only to other operators)";
-            exmaple = "staff";
+            example = "staff";
             default = null;
           };
           modes = mkOption {
