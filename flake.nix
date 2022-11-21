@@ -19,19 +19,33 @@
       url = "git+https://git.nev.systems/izzylan/nev-systems-site.git?submodules=1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    kiwi-irc-src = {
+      url = "github:kiwiirc/kiwiirc";
+      flake = false;
+    };
   };
 
-  outputs = inputs@{ self, nixpkgs, home-manager, nixos-generators, nev-systems-site, agenix }:
+  outputs = inputs@{ self, nixpkgs, home-manager, nixos-generators, nev-systems-site, agenix, kiwi-irc-src }:
+  let 
+    lib = nixpkgs.lib;
+    forEachFlakeSystem = lib.genAttrs lib.systems.flakeExposed;
+  in
   {
-    # Install iso with 
-    packages.x86_64-linux.install-iso = nixos-generators.nixosGenerate {
-      system = "x86_64-linux";
-      modules = [
-        ./hosts/base.nix
-        ./profiles/neovim.nix
-      ];
-      format = "install-iso";
-    };
+    packages = forEachFlakeSystem (system: {
+      install-iso = nixos-generators.nixosGenerate {
+        inherit system;
+        modules = [
+          ./hosts/base.nix
+          ./profiles/neovim.nix
+        ];
+        format = "install-iso";
+      };
+
+      kiwiirc-client = nixpkgs.${system}.yarn2nix.mkYarnPackage {
+        name = "kiwiirc-client";
+        src = kiwi-irc-src;
+      };
+    });
 
     nixosConfigurations = {
       vm-goth-pinkie-pie = nixpkgs.lib.nixosSystem {
