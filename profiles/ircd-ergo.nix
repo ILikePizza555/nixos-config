@@ -72,6 +72,8 @@ in
 
     nginx.virtualHosts.${host} = {
       inherit useACMEHost;
+      forceSSL = true;
+
       root = self.packages.${pkgs.system}.kiwiirc-client;
     };
   };
