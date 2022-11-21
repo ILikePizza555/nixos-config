@@ -23,7 +23,7 @@ in
   ];
 
   networking = {
-    firewall.allowedTCPPorts = [6697 8087];
+    firewall.allowedTCPPorts = [6697 8097];
   };
 
   services = {
