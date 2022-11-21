@@ -4,6 +4,18 @@
 let
   host = "irc.nev.systems";
   useACMEHost = "nev.systems";
+
+
+  kiwiircClientConfig = {
+    windowTitle = "nev.systems web irc";
+    startupOptions = {
+      server = host;
+      port = 8097;
+      tls = true;
+      channel = "#general";
+      direct = true;
+    };
+  };
 in
 {
   imports = [
@@ -74,7 +86,13 @@ in
       inherit useACMEHost;
       forceSSL = true;
 
-      root = self.packages.${pkgs.system}.kiwiirc-client;
+      root = pkgs.symlinkJoin {
+        name = "kiwiirc-frontend";
+        paths = [
+          self.packages.${pkgs.system}.kiwiirc-client
+          (pkgs.writeTextDir "static/config.json" (builtins.toJSON kiwiircClientConfig))
+        ];
+      };
     };
   };
 }
