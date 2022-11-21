@@ -20,7 +20,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     kiwi-irc-src = {
-      url = "github:kiwiirc/kiwiirc";
+      url = "github:kiwiirc/kiwiirc/v1.6.1";
       flake = false;
     };
   };
@@ -28,10 +28,13 @@
   outputs = inputs@{ self, nixpkgs, home-manager, nixos-generators, nev-systems-site, agenix, kiwi-irc-src }:
   let 
     lib = nixpkgs.lib;
-    forEachFlakeSystem = lib.genAttrs lib.systems.flakeExposed;
+    forEachFlakeSystem = callback: lib.genAttrs lib.systems.flakeExposed (system: 
+      let pkgs = nixpkgs.legacyPackages.${system}; in 
+      callback system pkgs
+    );
   in
   {
-    packages = forEachFlakeSystem (system: {
+    packages = forEachFlakeSystem (system: pkgs: {
       install-iso = nixos-generators.nixosGenerate {
         inherit system;
         modules = [
@@ -41,9 +44,23 @@
         format = "install-iso";
       };
 
-      kiwiirc-client = nixpkgs.${system}.yarn2nix.mkYarnPackage {
+      kiwiirc-client = pkgs.yarn2nix-moretea.mkYarnPackage {
         name = "kiwiirc-client";
         src = kiwi-irc-src;
+        # Need node options to fix https://stackoverflow.com/questions/69394632/webpack-build-failing-with-err-ossl-evp-unsupported
+        # Using openssl-legacy-provider shouldn't matter for building what is essentially a static site
+        buildPhase = ''
+          NODE_OPTIONS=--openssl-legacy-provider yarn run build
+        '';
+        installPhase = ''
+          runHook preInstall
+
+          mkdir $out
+          mv -t $out deps/$pname/dist/*
+
+          runHook postInstall
+          '';
+        doDist = false;
       };
     });
 

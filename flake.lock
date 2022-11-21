@@ -55,6 +55,23 @@
         "type": "github"
       }
     },
+    "kiwi-irc-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1643048761,
+        "narHash": "sha256-uRCFmIaIu/L5uoviPN5DP2By0f5FU6qY8uh3vFrLy3k=",
+        "owner": "kiwiirc",
+        "repo": "kiwiirc",
+        "rev": "fe7353d51a435150da0afe551f685afbef655ed0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kiwiirc",
+        "ref": "v1.6.1",
+        "repo": "kiwiirc",
+        "type": "github"
+      }
+    },
     "nev-systems-site": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -133,6 +150,7 @@
       "inputs": {
         "agenix": "agenix",
         "home-manager": "home-manager",
+        "kiwi-irc-src": "kiwi-irc-src",
         "nev-systems-site": "nev-systems-site",
         "nixos-generators": "nixos-generators",
         "nixpkgs": "nixpkgs"
