@@ -1,4 +1,5 @@
-{config, ...}:
+# Self is the flake self
+{self, config, ...}:
 
 let
   host = "irc.nev.systems";
@@ -71,9 +72,7 @@ in
 
     nginx.virtualHosts.${host} = {
       inherit useACMEHost;
-      locations."/" = {
-        return = "204";
-      };
+      root = self.packages.${pkgs.system}.kiwiirc-client;
     };
   };
 }
