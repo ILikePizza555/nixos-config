@@ -1,5 +1,5 @@
 # Self is the flake self
-{self, config, ...}:
+{self, pkgs, config, ...}:
 
 let
   host = "irc.nev.systems";
