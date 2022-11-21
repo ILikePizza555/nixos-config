@@ -623,7 +623,7 @@ in
       after = builtins.concatLists [
         [ "network.target" ]
         (if enableMysql then [ "mysql.service" ] else [])
-        (map (certName: [ "acme-finished-${certName}.target" ]) acmeHosts)
+        (map (certName: "acme-finished-${certName}.target") acmeHosts)
       ];
       script = ''
         mkdir -p languages
