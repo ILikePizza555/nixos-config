@@ -60,6 +60,9 @@
 
           runHook postInstall
           '';
+        postInstall = ''
+          rm $out/static/config.json
+        '';
         doDist = false;
       };
     });
