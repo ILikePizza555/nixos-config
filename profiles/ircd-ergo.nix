@@ -95,7 +95,7 @@ in
       };
 
       locations."/webirc" = {
-        proxyPass = "http://localhost:8097";
+        proxyPass = "http://127.0.0.1:8097";
         proxyWebsockets = true;
       };
     };
