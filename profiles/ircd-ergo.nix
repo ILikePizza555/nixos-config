@@ -76,7 +76,7 @@ in
           };
         };
         sts.enabled = true;
-        # websocketsAllowedOrigins = [ host ];
+        websocketsAllowedOrigins = [ "https://${host}:8097" "https://${host}" ];
         enforce-utf8 = true;
       };
       roleplay.enabled = true;
