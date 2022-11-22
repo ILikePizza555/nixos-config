@@ -8,6 +8,7 @@ let
 
   kiwiircClientConfig = {
     windowTitle = "nev.systems web irc";
+    startupScreen = "welcome";
     startupOptions = {
       server = host;
       port = 8097;
@@ -76,7 +77,7 @@ in
           };
         };
         sts.enabled = true;
-        websocketsAllowedOrigins = [ "https://${host}:8097" "https://${host}" ];
+        websocketsAllowedOrigins = [ "https://${host}:8097" "https://${host}" "*"];
         enforce-utf8 = true;
       };
       roleplay.enabled = true;
