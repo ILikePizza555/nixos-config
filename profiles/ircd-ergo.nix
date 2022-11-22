@@ -93,6 +93,11 @@ in
           (pkgs.writeTextDir "static/config.json" (builtins.toJSON kiwiircClientConfig))
         ];
       };
+
+      locations.webirc = {
+        proxyPass = "http://localhost:8097";
+        proxyWebsockets = true;
+      };
     };
   };
 }
