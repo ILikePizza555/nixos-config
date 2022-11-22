@@ -9,11 +9,8 @@ let
   kiwiircClientConfig = {
     windowTitle = "nev.systems web irc";
     startupOptions = {
-      server = host;
-      port = 8097;
-      tls = true;
+      websocket = "wss://${host}:8097/";
       channel = "#general";
-      direct = true;
     };
   };
 in
