@@ -29,6 +29,8 @@
           nnoremap <leader>fg <cmd>Telescope live_grep<cr>
           nnoremap <leader>fb <cmd>Telescope buffers<cr>
           nnoremap <leader>fh <cmd>Telescope help_tdags<cr>
+
+          lua require'lspconfig'.rust_analyzer.setup({})
 				'';
 				packages.myVimPackage = with pkgs.vimPlugins; {
 					start = [
@@ -39,6 +41,7 @@
 					  telescope-nvim
             nvim-web-devicons
             barbar-nvim
+            nvim-lspconfig
 					];
 				};
 			};
