@@ -17,6 +17,7 @@
   environment = {
     systemPackages = [
       nixos-generators.defaultPackage.${pkgs.system}
+      pkgs.mosh
     ];
   };
 
