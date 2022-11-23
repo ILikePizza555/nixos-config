@@ -17,7 +17,6 @@
   environment = {
     systemPackages = [
       nixos-generators.defaultPackage.${pkgs.system}
-      pkgs.mosh
     ];
   };
 
@@ -30,6 +29,10 @@
       ];
 		};
 	};
+
+  programs = {
+    mosh.enable = true;
+  };
 
 	services = {
     tailscale.enable = true;
