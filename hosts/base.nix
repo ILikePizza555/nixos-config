@@ -11,6 +11,7 @@
       pkgs.age
       # Syntax highlighted `cat`
       pkgs.bat 
+      pkgs.wget
     ];
   };
 
