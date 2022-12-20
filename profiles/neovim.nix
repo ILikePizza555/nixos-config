@@ -28,6 +28,7 @@ let
       nvim-web-devicons
       barbar-nvim
       nvim-lspconfig
+      rust-tools-nvim
     ];
   };
 
