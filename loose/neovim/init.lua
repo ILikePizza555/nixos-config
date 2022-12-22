@@ -2,6 +2,7 @@ local nvim_lsp = require'lspconfig'
 local rust_tools = require'rust-tools'
 local trouble = require'trouble'
 local cmp = require'cmp'
+local neogit = require'neogit'
 
 vim.cmd.colorscheme('nightfox')
 vim.cmd.syntax('on')
@@ -14,6 +15,7 @@ vim.o.shiftwidth = 2
 
 vim.o.relativenumber = true
 
+neogit.setup({})
 -- Keybinds (https://neovim.io/doc/user/api.html#nvim_set_keymap())
 -- Telescope keybinds
 vim.api.nvim_set_keymap('n', '<Leader>ff', '<cmd>Telescope find_files<cr>', {})

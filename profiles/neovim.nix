@@ -25,6 +25,7 @@ let
       indent-blankline-nvim
       plenary-nvim
       telescope-nvim
+      neogit
       nvim-web-devicons
       barbar-nvim
       nvim-lspconfig
