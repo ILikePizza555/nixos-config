@@ -1,4 +1,5 @@
 local nvim_lsp = require'lspconfig'
+local rust_tools = require'rust-tools'
 
 vim.cmd.colorscheme('nightfox')
 vim.cmd.syntax('on')
@@ -24,7 +25,7 @@ vim.keymap.set('n', '[d',				vim.diagnostic.goto_prev,		{ noremap = true, silent
 vim.keymap.set('n', ']d',				vim.diagnostic.goto_next,		{ noremap = true, silent = true })
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist,	{ noremap = true, silent = true })
 
-local on_attach = function(client, bufnr)
+local rust_lsp_on_attach = function(client, bufnr)
 	-- Enable completion triggered by <c-x><c-o>
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -49,6 +50,8 @@ local on_attach = function(client, bufnr)
 end
 
 -- LSP Configuration
-nvim_lsp.rust_analyzer.setup({
-	on_attach = on_attach
+rust_tools.setup({
+	server = {
+		on_attach = rust_lsp_on_attach
+	}
 })
