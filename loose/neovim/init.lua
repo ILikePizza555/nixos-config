@@ -1,5 +1,6 @@
 local nvim_lsp = require'lspconfig'
 local rust_tools = require'rust-tools'
+local trouble = require'trouble'
 
 vim.cmd.colorscheme('nightfox')
 vim.cmd.syntax('on')
@@ -55,3 +56,6 @@ rust_tools.setup({
 		on_attach = rust_lsp_on_attach
 	}
 })
+
+
+trouble.setup()

@@ -29,6 +29,7 @@ let
       barbar-nvim
       nvim-lspconfig
       rust-tools-nvim
+      trouble-nvim
     ];
   };
 
