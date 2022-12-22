@@ -30,6 +30,11 @@ let
       nvim-lspconfig
       rust-tools-nvim
       trouble-nvim
+      luasnip
+      nvim-cmp
+      cmp-nvim-lsp
+      cmp_luasnip
+      cmp-buffer
     ];
   };
 
