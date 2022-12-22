@@ -16,6 +16,9 @@ vim.o.shiftwidth = 2
 vim.o.relativenumber = true
 
 neogit.setup({})
+
+require('lualine').setup()
+
 -- Keybinds (https://neovim.io/doc/user/api.html#nvim_set_keymap())
 -- Telescope keybinds
 vim.api.nvim_set_keymap('n', '<Leader>ff', '<cmd>Telescope find_files<cr>', {})

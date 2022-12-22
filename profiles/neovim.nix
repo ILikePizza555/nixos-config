@@ -26,6 +26,7 @@ let
       plenary-nvim
       telescope-nvim
       neogit
+      lualine-nvim
       nvim-web-devicons
       barbar-nvim
       nvim-lspconfig
