@@ -4,7 +4,7 @@ The goal behind the design and structure is to create composable configuration m
 
 # Directory Structure
 
-`hosts/` - Contains configuration for specific hosts. These are generally referenced by `flake.nix` in the `nixosConfigurations` output.
-`profiles/` - Declarative configuration.
-`keys/` - Per-user public keys
-`users/` - Home-manager configs
+- `hosts/` - Contains configuration for specific hosts. These are generally referenced by `flake.nix` in the `nixosConfigurations` output.
+- `profiles/` - Declarative configuration.
+- `keys/` - Per-user public keys
+- `users/` - Home-manager configs
