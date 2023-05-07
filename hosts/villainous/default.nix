@@ -105,11 +105,14 @@
 				libinput.enable = true;
 				xkbOptions = "eurosign:e";
 
+				displayManager.lightdm = {
+					enable = true;
+				};
+
 				windowManager.i3 = {
 					enable = true;
 					extraPackages = [
-						i3Status
-						i3lock
+						pkgs.i3Status
 					];
 				};
 			};
