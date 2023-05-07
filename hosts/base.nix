@@ -12,6 +12,8 @@
 			# Syntax highlighted `cat`
 			pkgs.bat 
 			pkgs.wget
+      # Terminal-based file manager
+      pkgs.nnn
 		];
 	};
 
