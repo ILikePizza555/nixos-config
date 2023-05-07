@@ -20,15 +20,24 @@ let
 		withNodeJs = true;
 		# plugins can be a listof attrset with {plugin: package, config: string, options: bool} or just a list of packages.
 		plugins = with pkgs.vimPlugins; [
+			# Color themes
 			nightfox-nvim
 			onedark-nvim
-			vim-nix
-			indent-blankline-nvim
-			plenary-nvim
-			telescope-nvim
-			neogit
-			lualine-nvim
+			# Icons
 			nvim-web-devicons
+
+			vim-nix
+			# Adds indent lines
+			indent-blankline-nvim
+			# nvim code library. Dependency for telescope
+			plenary-nvim
+			# Fuzzy-finder for nvim written in Lua.
+			telescope-nvim
+			# Nvim git porcelain
+			neogit
+			# Nvim statusline written in Lua.
+			lualine-nvim
+			# Nvim tabline plugin
 			barbar-nvim
 			nvim-lspconfig
 			rust-tools-nvim
