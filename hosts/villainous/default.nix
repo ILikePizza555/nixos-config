@@ -129,7 +129,7 @@
 			};
 			sonata = {
 				isNormalUser = true;
-				description "Sonata's account";
+				description = "Sonata's account";
 				extraGroups = [ "networkmanager" ];
 			};
 		};
