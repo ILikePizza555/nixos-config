@@ -111,7 +111,7 @@
 				windowManager.i3 = {
 					enable = true;
 					extraPackages = [
-						pkgs.i3Status
+						pkgs.i3status
 					];
 				};
 			};
