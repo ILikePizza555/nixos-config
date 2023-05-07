@@ -43,7 +43,6 @@
 		networking = {
 			hostName = "izzy-villian";
 			networkmanager.enable = true;
-			useDHCP = true;
 		};
 
 		nix.extraOptions = ''experimental-features = nix-command flakes'';
