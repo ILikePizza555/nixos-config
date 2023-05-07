@@ -37,6 +37,7 @@ let
       cmp-nvim-lsp
       cmp_luasnip
       cmp-buffer
+      presence-nvim
     ];
   };
 
