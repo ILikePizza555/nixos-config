@@ -41,7 +41,7 @@
 		location.provider = "geoclue2";
 
 		networking = {
-			hostname = "izzy-villian";
+			hostName = "izzy-villian";
 			networkmanager.enable = true;
 			useDHCP = true;
 		};
