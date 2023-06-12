@@ -34,6 +34,8 @@
 		);
 	in
 	{
+		profiles = import ./profiles;
+
 		packages = forEachFlakeSystem (system: pkgs: {
 			install-iso = nixos-generators.nixosGenerate {
 				inherit system;
