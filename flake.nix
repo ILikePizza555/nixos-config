@@ -39,7 +39,7 @@
 				useGlobalPkgs = true;
 				useUserPackages = true;
 				users.izzylan = import ./users/izzylan.nix;
-			};
+			}
 		];
 	in
 	{
