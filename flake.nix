@@ -32,6 +32,14 @@
 			let pkgs = nixpkgs.legacyPackages.${system}; in 
 			callback system pkgs
 		);
+
+		izzylan-home = home-manager.nixosModules.home-manager {
+			home-manager = {
+				useGlobalPkgs = true;
+				useUserPackages = true;
+				users.izzylan = import ./users/izzylan.nix;
+			};
+		};
 	in
 	{
 		profiles = import ./profiles;
@@ -70,23 +78,6 @@
 		});
 
 		nixosConfigurations = {
-			vm-goth-pinkie-pie = nixpkgs.lib.nixosSystem {
-				system = "x86_64-linux";
-				specialArgs = inputs;
-				modules = [
-					./hosts/goth-pinkie-pie
-					./profiles/neovim.nix
-					home-manager.nixosModules.home-manager
-					{
-						home-manager = {
-							useGlobalPkgs = true;
-							useUserPackages = true;
-							users.izzylan = import ./users/izzylan.nix;
-						};
-					}
-				];
-			};
-
 			nev-systems = nixpkgs.lib.nixosSystem {
 				system = "x86_64-linux";
 				specialArgs = inputs;
@@ -96,14 +87,28 @@
 					./profiles/neovim.nix
 					./profiles/gitea.nix
 					./profiles/ircd-ergo.nix
-					home-manager.nixosModules.home-manager
-					{
-						home-manager = {
-							useGlobalPkgs = true;
-							useUserPackages = true;
-							users.izzylan = import ./users/izzylan.nix;
-						};
-					}
+					izzylan-home
+				];
+			};
+
+			r196-club = nixpkgs.lib.nixosSystem {
+				system = "x86_64-linux";
+				specialArgs = inputs;
+				modules = [
+					./hosts/nev-systems
+					agenix.nixosModule
+					./profiles/neovim.nix
+					izzylan-home
+				];
+			};
+
+			vm-goth-pinkie-pie = nixpkgs.lib.nixosSystem {
+				system = "x86_64-linux";
+				specialArgs = inputs;
+				modules = [
+					./hosts/goth-pinkie-pie
+					./profiles/neovim.nix
+					izzylan-home
 				];
 			};
 
