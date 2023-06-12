@@ -1,6 +1,6 @@
 {
 	inputs = {
-		nixpkgs.url = github:NixOS/nixpkgs;
+		nixpkgs.url = github:NixOS/nixpkgs/23.05;
 		agenix = {
 			url = github:ryantm/agenix;
 			inputs.nixpkgs.follows = "nixpkgs";
