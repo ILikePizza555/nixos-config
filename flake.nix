@@ -33,7 +33,7 @@
 			callback system pkgs
 		);
 
-		izzylan-home = home-manager.nixosModules.home-manager {
+		izzylan-home = {
 			home-manager = {
 				useGlobalPkgs = true;
 				useUserPackages = true;
@@ -87,7 +87,7 @@
 					./profiles/neovim.nix
 					./profiles/gitea.nix
 					./profiles/ircd-ergo.nix
-					izzylan-home
+					(home-manager.nixosModules.home-manager izzylan-home)
 				];
 			};
 
@@ -98,7 +98,7 @@
 					./hosts/nev-systems
 					agenix.nixosModules.default
 					./profiles/neovim.nix
-					izzylan-home
+					(home-manager.nixosModules.home-manager izzylan-home)
 				];
 			};
 
@@ -108,7 +108,7 @@
 				modules = [
 					./hosts/goth-pinkie-pie
 					./profiles/neovim.nix
-					izzylan-home
+					(home-manager.nixosModules.home-manager izzylan-home)
 				];
 			};
 
