@@ -66,6 +66,7 @@
       openssh.authorizedKeys.keyFiles = [
         ../../keys/izzylan/pinkie-pie
         ../../keys/izzylan/ipad
+        ../../keys/izzylan/izzy-luna-se
       ];
     };
 
