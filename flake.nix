@@ -97,7 +97,7 @@
 				system = "x86_64-linux";
 				specialArgs = inputs;
 				modules = [
-					./hosts/nev-systems
+					./hosts/r196-club
 					agenix.nixosModules.default
 					./profiles/neovim.nix
 				] ++ izzylan-home;
