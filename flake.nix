@@ -33,13 +33,14 @@
 			callback system pkgs
 		);
 
-		izzylan-home = {
-			home-manager = {
+		izzylan-home = [
+			home-manager.nixosModules.home-manager
+			{
 				useGlobalPkgs = true;
 				useUserPackages = true;
 				users.izzylan = import ./users/izzylan.nix;
 			};
-		};
+		];
 	in
 	{
 		profiles = import ./profiles;
@@ -87,8 +88,7 @@
 					./profiles/neovim.nix
 					./profiles/gitea.nix
 					./profiles/ircd-ergo.nix
-					(home-manager.nixosModules.home-manager izzylan-home)
-				];
+				] ++ izzylan-home;
 			};
 
 			r196-club = nixpkgs.lib.nixosSystem {
@@ -98,8 +98,7 @@
 					./hosts/nev-systems
 					agenix.nixosModules.default
 					./profiles/neovim.nix
-					(home-manager.nixosModules.home-manager izzylan-home)
-				];
+				] ++ izzylan-home;
 			};
 
 			vm-goth-pinkie-pie = nixpkgs.lib.nixosSystem {
@@ -108,8 +107,7 @@
 				modules = [
 					./hosts/goth-pinkie-pie
 					./profiles/neovim.nix
-					(home-manager.nixosModules.home-manager izzylan-home)
-				];
+				] ++ izzylan-home;
 			};
 
 			villainous = nixpkgs.lib.nixosSystem {
