@@ -36,9 +36,11 @@
 		izzylan-home = [
 			home-manager.nixosModules.home-manager
 			{
-				useGlobalPkgs = true;
-				useUserPackages = true;
-				users.izzylan = import ./users/izzylan.nix;
+				home-manager = {
+					useGlobalPkgs = true;
+					useUserPackages = true;
+					users.izzylan = import ./users/izzylan.nix;
+				};
 			}
 		];
 	in
