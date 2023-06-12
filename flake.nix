@@ -83,7 +83,7 @@
 				specialArgs = inputs;
 				modules = [
 					./hosts/nev-systems
-					agenix.nixosModule
+					agenix.nixosModules.default
 					./profiles/neovim.nix
 					./profiles/gitea.nix
 					./profiles/ircd-ergo.nix
@@ -96,7 +96,7 @@
 				specialArgs = inputs;
 				modules = [
 					./hosts/nev-systems
-					agenix.nixosModule
+					agenix.nixosModules.default
 					./profiles/neovim.nix
 					izzylan-home
 				];
