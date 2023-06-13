@@ -66,22 +66,22 @@
 		};
 
 		users.nginx = {
-      extraGroups = ["acme"];
-    };
+			extraGroups = ["acme"];
+		};
 	};
 
 	security = {
-    acme = {
-      acceptTerms = true;
-      defaults.email = "avrisaac555+acme-r196-club@gmail.com";
-      certs."r196.club" = {
-        domain = "*.r196.club";
-        extraDomainNames = ["r196.club"];
-        dnsProvider = "namecheap";
-        credentialsFile = config.age.secrets.namecheapApi.path;
-      };
-    };
-  };
+		acme = {
+			acceptTerms = true;
+			defaults.email = "avrisaac555+acme-r196-club@gmail.com";
+			certs."r196.club" = {
+				domain = "*.r196.club";
+				extraDomainNames = ["r196.club"];
+				dnsProvider = "namecheap";
+				credentialsFile = config.age.secrets.namecheapApi.path;
+			};
+		};
+	};
 
 	system.stateVersion = "23.05";
 }
