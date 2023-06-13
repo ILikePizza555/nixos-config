@@ -6,6 +6,12 @@
     ./hardware-configuration.nix
   ];
 
+	age = {
+    secrets = {
+      namecheapApi.file = ../../secrets/namecheapapi-r196-club.age;
+    };
+  };
+
   boot = {
     loader.grub.device = "/dev/vda";
   };
