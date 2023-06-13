@@ -70,10 +70,6 @@
 				../../keys/izzylan/izzy-luna-se
 			];
 		};
-
-		users.nginx = {
-			extraGroups = ["acme"];
-		};
 	};
 
 	security = {
