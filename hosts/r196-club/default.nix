@@ -92,7 +92,7 @@ in
 	system.stateVersion = "23.05";
 
 	systemd = {
-		services.lemmy.environment.LEMMY_DATABASE_URL = lib.mkForce null;
+		services.lemmy.environment.LEMMY_DATABASE_URL = lib.mkForce "postgresql://${lemmyDbUserName}:5432@/${lemmyDbName}?host=/run/postgresql";
 	};
 
 	users = {
