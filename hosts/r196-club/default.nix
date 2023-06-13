@@ -27,7 +27,7 @@
 
 	nixpkgs = {
 		overlays = [
-			(final: prev: { lemmy-ui = prev.lemmy-ui.override { nodejs = pkgs.nodejs_16; }; })
+			(final: prev: { lemmy-ui = prev.lemmy-ui.override { nodejs = pkgs.nodejs_18; }; })
 		];
 	};
 
