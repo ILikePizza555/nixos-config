@@ -57,7 +57,7 @@
 			isNormalUser = true;
 			description = "Izzy Lancaster personal account";
 			extraGroups = ["wheel"];
-			hashedPassword = "$6$2jTbqagpP2iqzvFR$5Rm/2tc0atsHbtt6iHM5D0BZmbBD612CvlgrlC/ZjUwr3u0MNG/KJxc9ai67qvhxlTX7CM5vf7SU7It.mVbcv0";
+			hashedPassword = "$6$niQq4PEbx7nyMvH/$WNrexM4za/YwX7a.ksaHKyLf7k1vI31mqZJ7Dip.rGSkNUOy7TZ3P1iNXlCCKsJx0iGGcJAtpLnHkfXOn.zTb/";
 			openssh.authorizedKeys.keyFiles = [
 				../../keys/izzylan/pinkie-pie
 				../../keys/izzylan/ipad
