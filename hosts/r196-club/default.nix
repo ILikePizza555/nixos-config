@@ -67,7 +67,7 @@ in
 		};
 
 		postgresql = {
-			enabled = true;
+			enable = true;
 			ensureDatabases = [ lemmyDbName ];
 			ensureUsers = [{
 				name = lemmyDbUserName;
