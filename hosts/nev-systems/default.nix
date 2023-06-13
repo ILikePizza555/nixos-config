@@ -8,7 +8,7 @@
 
   age = {
     secrets = {
-      namecheapApi.file = ../../secrets/namecheapapi.age;
+      namecheapApi.file = ../../secrets/namecheapapi-nev-systems.age;
     };
   };
 
