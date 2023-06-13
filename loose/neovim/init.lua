@@ -16,9 +16,8 @@ vim.o.relativenumber = true
 
 -- Not quite part of indent-blankline, but closely related
 vim.o.list = true
-vim.opt.listchars:append "lead:⋅"
-vim.opt.listchars:append "tab:→"
-vim.opt.listchars:append "eol:↴"
+vim.opt.listchars:append("lead:⋅")
+vim.opt.listchars:append("eol:↴")
 
 neogit.setup({})
 
