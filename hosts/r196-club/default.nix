@@ -26,6 +26,23 @@
 	};
 
 	services = {
+		caddy = {
+			virtualHosts = {
+				"r196.club" = {
+					useACMEHost = "r196.club";
+				};
+			};
+		};
+
+		lemmy = {
+			enable = true;
+			caddy.enable = true;
+			database.createLocally = true;
+			settings = {
+				hostname = "r196.club";
+			};
+		};
+
 		openssh = {
 			enable = true;
 			passwordAuthentication = false;
