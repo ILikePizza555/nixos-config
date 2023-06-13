@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
 	imports = [
@@ -56,6 +56,25 @@
 		};
 	};
 
+	security = {
+		acme = {
+			acceptTerms = true;
+			defaults.email = "avrisaac555+acme-r196-club@gmail.com";
+			certs."r196.club" = {
+				domain = "*.r196.club";
+				extraDomainNames = ["r196.club"];
+				dnsProvider = "namecheap";
+				credentialsFile = config.age.secrets.namecheapApi.path;
+			};
+		};
+	};
+
+	system.stateVersion = "23.05";
+
+	systemd = {
+		services.lemmy.environment.LEMMY_DATABASE_URL = lib.mkForce null;
+	};
+
 	users = {
 		mutableUsers = false;
 
@@ -71,19 +90,4 @@
 			];
 		};
 	};
-
-	security = {
-		acme = {
-			acceptTerms = true;
-			defaults.email = "avrisaac555+acme-r196-club@gmail.com";
-			certs."r196.club" = {
-				domain = "*.r196.club";
-				extraDomainNames = ["r196.club"];
-				dnsProvider = "namecheap";
-				credentialsFile = config.age.secrets.namecheapApi.path;
-			};
-		};
-	};
-
-	system.stateVersion = "23.05";
 }
