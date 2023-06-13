@@ -1,5 +1,9 @@
 { config, pkgs, lib, ... }:
 
+let
+	lemmyDbName = "lemmy";
+	lemmyDbUserName = "lemmy";
+in
 {
 	imports = [
 		../base.nix
@@ -43,8 +47,15 @@
 		lemmy = {
 			enable = true;
 			caddy.enable = true;
-			database.createLocally = true;
+			database.createLocally = false;
 			settings = {
+				database = {
+					user = lemmyDbName;
+					host = "/run/postgresql";
+					port = 5432;
+					database = lemmyDbUserName;
+					pool_size = 5;
+				};
 				hostname = "r196.club";
 			};
 		};
@@ -54,6 +65,15 @@
 			passwordAuthentication = false;
 			permitRootLogin = "no";
 		};
+
+		postgresql = {
+			enabled = true;
+			ensureDatabases = [ lemmyDbName ];
+			ensureUsers = [{
+				name = lemmyDbUserName;
+				ensurePermissions."DATABASE ${lemmyDbUserName}" = "ALL PRIVILEGES";
+			}];
+		}
 	};
 
 	security = {
