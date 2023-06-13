@@ -73,7 +73,7 @@ in
 				name = lemmyDbUserName;
 				ensurePermissions."DATABASE ${lemmyDbUserName}" = "ALL PRIVILEGES";
 			}];
-		}
+		};
 	};
 
 	security = {
