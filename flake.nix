@@ -9,6 +9,10 @@
 			url = github:nix-community/home-manager;
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+		nixos-wsl = {
+			url = "github:nix-community/NixOS-WSL";
+      		inputs.nixpkgs.follows = "nixpkgs";
+		};
 		# For building my custom nixos install iso
 		nixos-generators = {
 			url = "github:nix-community/nixos-generators";
@@ -25,7 +29,7 @@
 		};
 	};
 
-	outputs = inputs@{ self, nixpkgs, home-manager, nixos-generators, nev-systems-site, agenix, kiwi-irc-src }:
+	outputs = inputs@{ self, nixpkgs, home-manager, nixos-generators, nev-systems-site, agenix, kiwi-irc-src, nixos-wsl }:
 	let 
 		lib = nixpkgs.lib;
 		forEachFlakeSystem = callback: lib.genAttrs lib.systems.flakeExposed (system: 
@@ -81,6 +85,14 @@
 		});
 
 		nixosConfigurations = {
+			eos = nixpkgs.lib.nixosSystem {
+				system = "x86_64-linux";
+				specialArgs = inputs;
+				modules = [
+					./hosts/eos
+				];
+			};
+
 			nev-systems = nixpkgs.lib.nixosSystem {
 				system = "x86_64-linux";
 				specialArgs = inputs;
