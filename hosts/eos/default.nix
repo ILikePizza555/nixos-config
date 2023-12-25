@@ -15,13 +15,10 @@
 		nixos-wsl.nixosModules.wsl
 	];
 
-	networking = {
-		hostName = "eos";
-	};
-
 	wsl = {
 		enable = true;
 		defaultUser = "prophet";
+		wslConf.network.hostname = "eos";
 	};
 
 	system.stateVersion = "23.11";
