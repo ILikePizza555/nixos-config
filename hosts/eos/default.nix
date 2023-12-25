@@ -15,6 +15,10 @@
 		nixos-wsl.nixosModules.wsl
 	];
 
+	networking = {
+		hostName = "eos";
+	};
+
 	wsl = {
 		enable = true;
 		defaultUser = "prophet";
