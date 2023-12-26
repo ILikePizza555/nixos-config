@@ -93,6 +93,14 @@
 				];
 			};
 
+			janus = nixpkgs.lib.nixosSystem {
+				system = "aarch64";
+				specialArgs = inputs;
+				modules = [
+					./hosts/janus
+				] ++ izzylan-home;
+			};
+
 			nev-systems = nixpkgs.lib.nixosSystem {
 				system = "x86_64-linux";
 				specialArgs = inputs;
