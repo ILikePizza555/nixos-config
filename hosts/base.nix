@@ -14,6 +14,7 @@
 			wget
 			# Terminal-based file manager
 			nnn
+			thefuck
 			fzf
 			fishPlugins.fzf-fish
 			fishPlugins.forgit
