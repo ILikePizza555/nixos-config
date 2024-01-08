@@ -14,7 +14,6 @@
 			wget
 			# Terminal-based file manager
 			nnn
-			thefuck
 			fzf
 			fishPlugins.fzf-fish
 			fishPlugins.forgit
@@ -27,13 +26,9 @@
 	};
 
 	programs = {
-		fish = {
-			enable = true;
-		};
-
-		tmux = {
-			enable = true;
-		};
+		fish.enable = true;
+		thefuck.enable = true;
+		tmux.enable = true;
 	};
 
 	time = {
