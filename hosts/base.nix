@@ -11,6 +11,10 @@
 			age
 			# Syntax highlighted `cat`
 			bat 
+			# Modern replacement for `ls`
+			eza
+			# Modern replacement for `find`
+			fd
 			wget
 			# Terminal-based file manager
 			nnn
@@ -23,6 +27,14 @@
 	# We have to enable nixFlakes since this is a flake
 	nix = {
 		extraOptions = ''experimental-features = nix-command flakes'';
+	};
+
+	environment.shellAliases = {
+		l = "eza -aal";
+		ll = "eza -l";
+		ls = "eza";
+		cat = "bat";
+		find = "fd";
 	};
 
 	programs = {
