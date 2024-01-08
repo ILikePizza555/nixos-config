@@ -27,9 +27,10 @@
 			url = "github:kiwiirc/kiwiirc/v1.6.1";
 			flake = false;
 		};
+		vscode-server.url = "github:nix-community/nixos-vscode-server";
 	};
 
-	outputs = inputs@{ self, nixpkgs, home-manager, nixos-generators, nev-systems-site, agenix, kiwi-irc-src, nixos-wsl }:
+	outputs = inputs@{ self, nixpkgs, home-manager, nixos-generators, nev-systems-site, agenix, kiwi-irc-src, nixos-wsl, vscode-server }:
 	let 
 		lib = nixpkgs.lib;
 		forEachFlakeSystem = callback: lib.genAttrs lib.systems.flakeExposed (system: 

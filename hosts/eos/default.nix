@@ -7,16 +7,21 @@
 # eos is the nixos installation I run on WSL.
 # It is primarily used to boostrap and work on projects.
 
-{ conifg, pkgs, nixos-wsl, ... }:
+{ conifg, pkgs, nixos-wsl, vscode-server, ... }:
 
 {
 	imports = [
 		../base.nix
 		nixos-wsl.nixosModules.wsl
+		vscode-server.nixosModules.default
 	];
 
 	programs = {
 		direnv.enable = true;
+	};
+
+	services = {
+		vscode-server.enable = true;
 	};
 
 	wsl = {
