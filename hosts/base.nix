@@ -3,17 +3,20 @@
 
 {
 	environment = {
-		systemPackages = [
-			pkgs.git
-			pkgs.ripgrep
-			pkgs.tree
+		systemPackages = with pkgs; [
+			git
+			ripgrep
+			tree
 			# For encrypting secrets
-			pkgs.age
+			age
 			# Syntax highlighted `cat`
-			pkgs.bat 
-			pkgs.wget
+			bat 
+			wget
 			# Terminal-based file manager
-			pkgs.nnn
+			nnn
+			fzf
+			fishPlugins.fzf-fish
+			fishPlugins.forgit
 		];
 	};
 
