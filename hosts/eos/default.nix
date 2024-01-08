@@ -15,6 +15,10 @@
 		nixos-wsl.nixosModules.wsl
 	];
 
+	programs = {
+		direnv.enable = true;
+	};
+
 	wsl = {
 		enable = true;
 		defaultUser = "prophet";
